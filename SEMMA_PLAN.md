@@ -20,35 +20,77 @@ Recomendación práctica:
 
 ### S - Sample
 - Leer una muestra del CSV con Python para verificar cabecera, separador, cantidad de columnas y estructura real.
-- Confirmar que el CSV está cargado correctamente en HDFS.
-- Verificar la ruta final del archivo dentro de HDFS.
-- Revisar que la muestra sea suficiente para el análisis inicial.
+- Si se trabaja con varios meses, ejecutar `inspect_sample.py` sobre cada archivo para confirmar que todos tienen exactamente 25 columnas y el mismo orden.
+- Confirmar que los CSV están cargados correctamente en HDFS bajo `/user/hadoop/electropuno/raw/`.
+- **Script:** `scripts/sample/inspect_sample.py`
 
-### E - Explore
-- Cargar el dataset desde HDFS con Spark.
-- Revisar esquema, tipos de datos y primeras filas.
-- Identificar columnas clave para el análisis.
-- Hacer filtros básicos por región, ubigeo, distrito, fecha o variables similares si existen.
-- Generar conteos, nulos y estadísticas descriptivas.
+### E - Explore (etapa con MapReduce integrado)
+
+El Explore tiene dos sub-pasos cuando se trabaja con datos multi-mes.
+
+#### E.1 - MapReduce: agregacion por zona y mes
+- Ejecutar un job MapReduce con Hadoop Streaming sobre la carpeta `/user/hadoop/electropuno/raw/`.
+- El mapper extrae `ubigeo` y `periodo_facturado` de cada linea cruda y emite clave `ubigeo|mes` con consumo e importe.
+- El reducer suma `consumo_kwh`, `importe_soles` y cuenta registros por clave.
+- Salida en `/user/hadoop/electropuno/mapreduce_agg/` (formato TSV, pocas miles de filas).
+- **Proposito analitico:**
+  - Ver que zonas consumen mas por mes.
+  - Comparar como evoluciona el consumo de cada zona a lo largo de los meses disponibles.
+  - Detectar meses con pocos registros (posible archivo incompleto o corte distinto).
+  - Identificar zonas que aparecen o desaparecen entre periodos.
+- **Proposito tecnico:** reduce el volumen que Spark procesa en E.2 y demuestra uso real de MapReduce.
+- **Scripts implementados:** `scripts/explore/mapreduce/mapper.py` y `scripts/explore/mapreduce/reducer.py`
+
+#### E.2 - Explore Spark sobre la salida de MapReduce
+- Spark lee la salida ligera del job MapReduce, no los CSV crudos completos.
+- Esto evita que el worker con 1 nucleo y 1GB RAM colapse bajo el peso de multiples archivos grandes.
+- Detecta distribuciones de consumo, valores nulos y comportamiento por zona.
+- **Script:** `scripts/explore/explore_puno.py` (sin cambios en su cuerpo, solo cambia el `--input`)
+
+#### Compatibilidad garantizada
+El Explore con MapReduce **no alimenta a Modify**. Son ramas separadas:
+- MapReduce produce un reporte de exploración.
+- Modify sigue leyendo los CSV crudos completos con las 25 columnas originales.
 
 ### M - Modify
-- Limpiar nombres de columnas si es necesario.
-- Convertir tipos de datos incorrectos.
-- Tratar valores nulos o duplicados.
-- Filtrar registros irrelevantes para el análisis.
-- Crear variables derivadas si ayudan a la interpretación.
+- Lee los CSV crudos desde HDFS (25 columnas originales).
+- Tipa, limpia, enriquece UBIGEO y deriva variables.
+- **No cambia** respecto al diseño actual.
+- **Script:** `scripts/modify/modify_puno.py`
 
 ### M - Model
-- Definir una técnica simple de modelado según la estructura del CSV.
-- Si los datos lo permiten, probar segmentación o agrupamiento básico.
-- Si el objetivo del curso es más exploratorio que predictivo, esta fase puede centrarse en patrones y agrupaciones simples.
-- MapReduce no se usa aquí como modelo; en este trabajo se considera componente de procesamiento distribuido dentro de Hadoop.
+- Lee el output de Modify en Parquet.
+- `build_model_dataset_puno.py` agrega por zona y periodo.
+- Regresión lineal como ruta principal, KMeans como exploratorio, Random Forest como benchmark.
+- **No cambia** respecto al diseño actual.
+- **Scripts:** `scripts/model/`
 
 ### A - Assess
-- Interpretar resultados.
-- Verificar si los hallazgos ayudan a entender el consumo eléctrico.
-- Relacionar conclusiones con eficiencia, gestión de recursos o toma de decisiones.
-- Preparar capturas de pantalla y salidas terminales para el PDF.
+- Compara métricas entre modelos.
+- Cierra con la decisión técnica sobre el modelo elegido.
+- **Script:** `scripts/model/assess_model_puno.py`
+
+## 3.1 Diagrama del flujo completo
+
+```
+CSV multi-mes en HDFS (/raw/)
+        |
+        +--- [MapReduce: mapper.py + reducer.py]
+        |         Salida: /mapreduce_agg/  (tabla ligera)
+        |         Uso: Explore Spark lee esta salida (no los crudos)
+        |
+        +--- [Modify: modify_puno.py]
+                  Lee: CSV crudos (25 col)
+                  Salida: /modified_puno/ (Parquet)
+                       |
+                  [build_model_dataset_puno.py]
+                       |
+                  [model_regression / kmeans / random_forest]
+                       |
+                  [assess_model_puno.py]
+```
+
+**Regla clave:** MapReduce y Modify leen la misma fuente cruda pero producen salidas distintas para propósitos distintos. Nunca se encadenan uno al otro.
 
 ## 4. Entregables que conviene preparar
 - Un archivo de script o notebook con los comandos usados.
