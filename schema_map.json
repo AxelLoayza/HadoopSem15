@@ -1,0 +1,182 @@
+{
+  "metadata": {
+    "proyecto": "HadoopSem15 — Analisis de consumo electrico Puno",
+    "fuente_oficial": "Datos Abiertos Peru — Dataset de suministros de electricidad",
+    "nota": "El CSV crudo no incluye cabecera. Los nombres de columna provienen del catalogo oficial del dataset.",
+    "etapas": [
+      "csv_crudo",
+      "explore_puno",
+      "mapreduce_aggregate",
+      "modify_puno",
+      "model_dataset",
+      "model_regression",
+      "model_random_forest",
+      "model_kmeans"
+    ]
+  },
+  "stages": {
+    "csv_crudo": {
+      "descripcion": "Archivo CSV tal como se descarga del portal de Datos Abiertos. Sin cabecera, delimitado por punto y coma (;). 25 columnas. Cada fila representa un suministro de un usuario en un periodo facturado.",
+      "script_asigna_nombres": "scripts/explore/explore_puno.py, scripts/modify/modify_puno.py",
+      "columnas": [
+        { "posicion": 1,  "nombre": "fecha_corte",                    "tipo_crudo": "string",  "tipo_tipado": "date",    "origen": "crudo", "descripcion": "Fecha de corte de la informacion del registro (formato YYYYMMDD)" },
+        { "posicion": 2,  "nombre": "numero_servicio_anonimizado",     "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Numero de servicio anonimizado del suministro" },
+        { "posicion": 3,  "nombre": "nombre_servicio_anonimizado",     "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Nombre del servicio anonimizado" },
+        { "posicion": 4,  "nombre": "direccion_anonimizada",           "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Direccion del suministro anonimizada" },
+        { "posicion": 5,  "nombre": "numero_identidad_anonimizado",    "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Numero de identidad del titular anonimizado" },
+        { "posicion": 6,  "nombre": "tipo_documento_identificacion",   "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Tipo de documento de identificacion del titular (DNI, RUC, etc.)" },
+        { "posicion": 7,  "nombre": "codigo_empresa",                  "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Codigo de la empresa distribuidora de electricidad" },
+        { "posicion": 8,  "nombre": "nombre_empresa",                  "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Nombre de la empresa distribuidora de electricidad" },
+        { "posicion": 9,  "nombre": "codigo_unidad_negocio",           "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Codigo de la unidad de negocio dentro de la empresa" },
+        { "posicion": 10, "nombre": "nombre_unidad_negocio",           "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Nombre de la unidad de negocio dentro de la empresa" },
+        { "posicion": 11, "nombre": "periodo_facturado",               "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Periodo de facturacion en formato YYYYMM (anio y mes)" },
+        { "posicion": 12, "nombre": "tarifa",                          "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Codigo de tarifa aplicada al suministro (BT2, BT5A, etc.)" },
+        { "posicion": 13, "nombre": "departamento",                    "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Nombre del departamento tal como aparece en el CSV (texto libre)" },
+        { "posicion": 14, "nombre": "provincia",                       "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Nombre de la provincia tal como aparece en el CSV (texto libre)" },
+        { "posicion": 15, "nombre": "distrito",                        "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Nombre del distrito tal como aparece en el CSV (texto libre)" },
+        { "posicion": 16, "nombre": "ubigeo",                          "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Codigo UBIGEO de 6 digitos que identifica el distrito geograficamente" },
+        { "posicion": 17, "nombre": "tipo_documento_facturacion",      "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Tipo de documento emitido para la facturacion (boleta, factura)" },
+        { "posicion": 18, "nombre": "numero_documento_facturacion",    "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Numero del documento de facturacion emitido" },
+        { "posicion": 19, "nombre": "tipo_cartera",                    "tipo_crudo": "string",  "tipo_tipado": "string",  "origen": "crudo", "descripcion": "Tipo de cartera del suministro (residencial, comercial, industrial)" },
+        { "posicion": 20, "nombre": "fecha_vencimiento",               "tipo_crudo": "string",  "tipo_tipado": "date",    "origen": "crudo", "descripcion": "Fecha limite de pago del comprobante (formato YYYYMMDD)" },
+        { "posicion": 21, "nombre": "fecha_emision",                   "tipo_crudo": "string",  "tipo_tipado": "date",    "origen": "crudo", "descripcion": "Fecha de emision del comprobante de pago (formato YYYYMMDD)" },
+        { "posicion": 22, "nombre": "fecha_inicio_facturacion",        "tipo_crudo": "string",  "tipo_tipado": "date",    "origen": "crudo", "descripcion": "Fecha de inicio del periodo medido y facturado (formato YYYYMMDD)" },
+        { "posicion": 23, "nombre": "fecha_fin_facturacion",           "tipo_crudo": "string",  "tipo_tipado": "date",    "origen": "crudo", "descripcion": "Fecha de fin del periodo medido y facturado (formato YYYYMMDD)" },
+        { "posicion": 24, "nombre": "importe_soles",                   "tipo_crudo": "string",  "tipo_tipado": "double",  "origen": "crudo", "descripcion": "Importe total a pagar en soles S/ (puede usar coma decimal)" },
+        { "posicion": 25, "nombre": "consumo_kwh",                     "tipo_crudo": "string",  "tipo_tipado": "double",  "origen": "crudo", "descripcion": "Consumo electrico del periodo en kilovatios-hora KWh (puede usar coma decimal)" }
+      ]
+    },
+
+    "explore_puno": {
+      "descripcion": "Salida del script explore_puno.py. Mantiene las 25 columnas crudas y agrega 7 columnas de enriquecimiento UBIGEO. Usado para analisis exploratorio de la data completa a nivel fila.",
+      "script": "scripts/explore/explore_puno.py",
+      "input": "hdfs://.../raw/ (CSV crudo)",
+      "columnas_heredadas": "todas las de csv_crudo (posiciones 1-25)",
+      "columnas_nuevas": [
+        { "nombre": "ubigeo_code",    "tipo": "string", "origen": "enriquecido", "descripcion": "Copia de ubigeo usada como clave de lookup en el mapa UBIGEO" },
+        { "nombre": "department_name","tipo": "string", "origen": "enriquecido", "descripcion": "Nombre oficial del departamento segun ubigeo_map.json (primeros 2 digitos del UBIGEO)" },
+        { "nombre": "province_name",  "tipo": "string", "origen": "enriquecido", "descripcion": "Nombre oficial de la provincia segun ubigeo_map.json (primeros 4 digitos del UBIGEO)" },
+        { "nombre": "district_name",  "tipo": "string", "origen": "enriquecido", "descripcion": "Nombre oficial del distrito segun ubigeo_map.json (6 digitos del UBIGEO)" },
+        { "nombre": "region_code",    "tipo": "string", "origen": "enriquecido", "descripcion": "Codigo de region: primeros 2 digitos del UBIGEO" },
+        { "nombre": "province_code",  "tipo": "string", "origen": "enriquecido", "descripcion": "Codigo de provincia: primeros 4 digitos del UBIGEO" },
+        { "nombre": "region_name",    "tipo": "string", "origen": "enriquecido", "descripcion": "Nombre de la region segun ubigeo_map.json" }
+      ]
+    },
+
+    "mapreduce_aggregate": {
+      "descripcion": "Salida del job MapReduce (Hadoop Streaming). Tabla agregada por ubigeo y mes. Resultado de mapper.py + reducer.py. Solo 5 columnas; usado en la sub-etapa E.2 de Explore con Spark.",
+      "script": "scripts/explore/mapreduce/mapper.py + reducer.py",
+      "formato": "TSV sin cabecera",
+      "input": "hdfs://.../raw/ (todos los CSVs crudos del periodo)",
+      "output": "hdfs://.../mapreduce_agg/",
+      "columnas": [
+        { "nombre": "ubigeo",              "tipo": "string", "origen": "crudo",   "descripcion": "Codigo UBIGEO de 6 digitos (extraido del campo posicion 16 del CSV crudo)" },
+        { "nombre": "mes",                 "tipo": "string", "origen": "crudo",   "descripcion": "Periodo YYYYMM (extraido del campo periodo_facturado, posicion 11 del CSV crudo)" },
+        { "nombre": "total_consumo_kwh",   "tipo": "double", "origen": "agregado","descripcion": "Suma de consumo_kwh de todos los suministros de ese ubigeo en ese mes" },
+        { "nombre": "total_importe_soles", "tipo": "double", "origen": "agregado","descripcion": "Suma de importe_soles de todos los suministros de ese ubigeo en ese mes" },
+        { "nombre": "registros",           "tipo": "int",    "origen": "agregado","descripcion": "Cantidad de filas (suministros) del ubigeo en ese mes" }
+      ]
+    },
+
+    "modify_puno": {
+      "descripcion": "Salida del script modify_puno.py. Aplica tipado correcto a las columnas crudas, agrega enriquecimiento UBIGEO y columnas derivadas temporales. Guardado como Parquet en HDFS. 35 columnas totales.",
+      "script": "scripts/modify/modify_puno.py",
+      "input": "hdfs://.../raw/ (CSV crudo, mismas 25 columnas)",
+      "output": "hdfs://.../modified_puno/ (Parquet)",
+      "nota": "SIEMPRE lee de /raw/, NUNCA de la salida del MapReduce.",
+      "columnas_heredadas_y_tipadas": [
+        { "nombre": "fecha_corte",               "tipo": "date",   "origen": "crudo tipado", "descripcion": "Convertida de string YYYYMMDD a tipo date" },
+        { "nombre": "periodo_facturado",         "tipo": "string", "origen": "crudo tipado", "descripcion": "Mantenido como string YYYYMM" },
+        { "nombre": "importe_soles",             "tipo": "double", "origen": "crudo tipado", "descripcion": "Convertida de string (con posible coma decimal) a double" },
+        { "nombre": "consumo_kwh",               "tipo": "double", "origen": "crudo tipado", "descripcion": "Convertida de string a double" },
+        { "nombre": "fecha_vencimiento",         "tipo": "date",   "origen": "crudo tipado", "descripcion": "Convertida de string YYYYMMDD a date" },
+        { "nombre": "fecha_emision",             "tipo": "date",   "origen": "crudo tipado", "descripcion": "Convertida de string YYYYMMDD a date" },
+        { "nombre": "fecha_inicio_facturacion",  "tipo": "date",   "origen": "crudo tipado", "descripcion": "Convertida de string YYYYMMDD a date" },
+        { "nombre": "fecha_fin_facturacion",     "tipo": "date",   "origen": "crudo tipado", "descripcion": "Convertida de string YYYYMMDD a date" },
+        { "nombre": "resto_columnas_crudas",     "tipo": "string", "origen": "crudo tipado", "descripcion": "Las demas 17 columnas string se mantienen iguales tras trim()" }
+      ],
+      "columnas_enriquecimiento_ubigeo": [
+        { "nombre": "region_name",   "tipo": "string", "origen": "enriquecido", "descripcion": "Nombre de la region desde ubigeo_map.json" },
+        { "nombre": "province_name", "tipo": "string", "origen": "enriquecido", "descripcion": "Nombre de la provincia desde ubigeo_map.json" },
+        { "nombre": "district_name", "tipo": "string", "origen": "enriquecido", "descripcion": "Nombre del distrito desde ubigeo_map.json" },
+        { "nombre": "region_code",   "tipo": "string", "origen": "enriquecido", "descripcion": "Primeros 2 digitos del UBIGEO" },
+        { "nombre": "province_code", "tipo": "string", "origen": "enriquecido", "descripcion": "Primeros 4 digitos del UBIGEO" }
+      ],
+      "columnas_derivadas": [
+        { "nombre": "anio_corte",        "tipo": "int",    "origen": "derivado", "descripcion": "Anio extraido de fecha_corte. Permite filtrar por anio de actualizacion del dato" },
+        { "nombre": "mes_corte",         "tipo": "int",    "origen": "derivado", "descripcion": "Mes extraido de fecha_corte" },
+        { "nombre": "anio_facturacion",  "tipo": "int",    "origen": "derivado", "descripcion": "Anio extraido de periodo_facturado (primeros 4 digitos). Clave para el modelado temporal" },
+        { "nombre": "mes_facturacion",   "tipo": "int",    "origen": "derivado", "descripcion": "Mes extraido de periodo_facturado (digitos 5-6). Clave para el modelado temporal" },
+        { "nombre": "categoria_consumo", "tipo": "string", "origen": "derivado", "descripcion": "Segmento de consumo: 'alto' (>=150 KWh), 'medio' (>=50 KWh), 'bajo' (<50 KWh)" }
+      ]
+    },
+
+    "model_dataset": {
+      "descripcion": "Tabla agregada construida por build_model_dataset_puno.py. Agrupa la salida de Modify por zona geografica y periodo. Es el insumo directo de todos los modelos ML. 15 columnas.",
+      "script": "scripts/model/build_model_dataset_puno.py",
+      "input": "hdfs://.../modified_puno/ (Parquet de Modify)",
+      "output": "hdfs://.../model_dataset_puno/ (Parquet)",
+      "columnas_agrupacion": [
+        { "nombre": "anio_facturacion", "tipo": "int",    "origen": "heredado de modify", "descripcion": "Anio del periodo facturado" },
+        { "nombre": "mes_facturacion",  "tipo": "int",    "origen": "heredado de modify", "descripcion": "Mes del periodo facturado" },
+        { "nombre": "region_code",      "tipo": "string", "origen": "heredado de modify", "descripcion": "Codigo de region (2 digitos UBIGEO)" },
+        { "nombre": "region_name",      "tipo": "string", "origen": "heredado de modify", "descripcion": "Nombre de la region" },
+        { "nombre": "province_code",    "tipo": "string", "origen": "heredado de modify", "descripcion": "Codigo de provincia (4 digitos UBIGEO)" },
+        { "nombre": "province_name",    "tipo": "string", "origen": "heredado de modify", "descripcion": "Nombre de la provincia" },
+        { "nombre": "departamento",     "tipo": "string", "origen": "heredado de modify", "descripcion": "Nombre del departamento tal como aparece en el CSV crudo" },
+        { "nombre": "provincia",        "tipo": "string", "origen": "heredado de modify", "descripcion": "Nombre de la provincia tal como aparece en el CSV crudo" },
+        { "nombre": "distrito",         "tipo": "string", "origen": "heredado de modify", "descripcion": "Nombre del distrito tal como aparece en el CSV crudo" },
+        { "nombre": "ubigeo",           "tipo": "string", "origen": "heredado de modify", "descripcion": "Codigo UBIGEO de 6 digitos. Es la clave geografica de cada fila del dataset" }
+      ],
+      "columnas_agregacion": [
+        { "nombre": "registros",             "tipo": "long",   "origen": "agregado", "descripcion": "Cantidad de suministros (filas crudas) del ubigeo en el periodo" },
+        { "nombre": "consumo_total_kwh",     "tipo": "double", "origen": "agregado", "descripcion": "Suma total de consumo_kwh. Es la variable objetivo (label) en los modelos de regresion" },
+        { "nombre": "consumo_promedio_kwh",  "tipo": "double", "origen": "agregado", "descripcion": "Promedio de consumo_kwh por suministro en la zona y periodo" },
+        { "nombre": "importe_total_soles",   "tipo": "double", "origen": "agregado", "descripcion": "Suma total de importe_soles. Feature en los modelos de regresion" },
+        { "nombre": "importe_promedio_soles","tipo": "double", "origen": "agregado", "descripcion": "Promedio de importe_soles por suministro en la zona y periodo" }
+      ]
+    },
+
+    "model_regression": {
+      "descripcion": "Predicciones del modelo de regresion lineal. Guardado como Parquet. Variable objetivo: consumo_total_kwh. Features: anio_facturacion, mes_facturacion, registros, importe_total_soles, importe_promedio_soles + ubigeo (one-hot encoded).",
+      "script": "scripts/model/model_regression_puno.py",
+      "input": "hdfs://.../model_dataset_puno/",
+      "output": "hdfs://.../model_outputs/regression_predictions/",
+      "columnas": [
+        { "nombre": "ubigeo",            "tipo": "string", "origen": "heredado de model_dataset", "descripcion": "Codigo UBIGEO de 6 digitos" },
+        { "nombre": "anio_facturacion",  "tipo": "int",    "origen": "heredado de model_dataset", "descripcion": "Anio del periodo facturado" },
+        { "nombre": "mes_facturacion",   "tipo": "int",    "origen": "heredado de model_dataset", "descripcion": "Mes del periodo facturado" },
+        { "nombre": "consumo_total_kwh", "tipo": "double", "origen": "heredado de model_dataset", "descripcion": "Valor real (label). Consumo total observado en KWh" },
+        { "nombre": "prediction",        "tipo": "double", "origen": "modelo",                    "descripcion": "Consumo predicho por la regresion lineal en KWh" },
+        { "nombre": "error",             "tipo": "double", "origen": "modelo",                    "descripcion": "Residuo: consumo_total_kwh - prediction. Positivo = subestimacion" },
+        { "nombre": "absolute_error",    "tipo": "double", "origen": "modelo",                    "descripcion": "Valor absoluto del error. Usado para calcular MAE" }
+      ]
+    },
+
+    "model_random_forest": {
+      "descripcion": "Predicciones del modelo Random Forest (80 arboles, profundidad 10). Mismo esquema que regresion lineal. Sirve como benchmark comparativo.",
+      "script": "scripts/model/model_random_forest_puno.py",
+      "input": "hdfs://.../model_dataset_puno/",
+      "output": "hdfs://.../model_outputs/random_forest_predictions/",
+      "columnas": "Identico al esquema de model_regression (mismas 7 columnas con mismo significado)"
+    },
+
+    "model_kmeans": {
+      "descripcion": "Asignaciones de cluster del modelo KMeans. Features escaladas con StandardScaler sobre columnas numericas del model_dataset. El cluster (prediction) segmenta zonas segun patron de consumo.",
+      "script": "scripts/model/model_kmeans_puno.py",
+      "input": "hdfs://.../model_dataset_puno/",
+      "output": "hdfs://.../model_outputs/kmeans_predictions/",
+      "columnas": [
+        { "nombre": "ubigeo",              "tipo": "string", "origen": "heredado de model_dataset", "descripcion": "Codigo UBIGEO de 6 digitos" },
+        { "nombre": "anio_facturacion",    "tipo": "int",    "origen": "heredado de model_dataset", "descripcion": "Anio del periodo facturado" },
+        { "nombre": "mes_facturacion",     "tipo": "int",    "origen": "heredado de model_dataset", "descripcion": "Mes del periodo facturado" },
+        { "nombre": "registros",           "tipo": "long",   "origen": "heredado de model_dataset", "descripcion": "Cantidad de suministros de la zona en el periodo" },
+        { "nombre": "importe_total_soles", "tipo": "double", "origen": "heredado de model_dataset", "descripcion": "Importe total del periodo en la zona" },
+        { "nombre": "importe_promedio_soles","tipo":"double", "origen": "heredado de model_dataset", "descripcion": "Importe promedio por suministro" },
+        { "nombre": "consumo_promedio_kwh","tipo": "double", "origen": "heredado de model_dataset", "descripcion": "Consumo promedio por suministro en la zona" },
+        { "nombre": "features",            "tipo": "vector", "origen": "modelo",                    "descripcion": "Vector de features escalado con StandardScaler. Requerido por ClusteringEvaluator para silhouette" },
+        { "nombre": "prediction",          "tipo": "int",    "origen": "modelo",                    "descripcion": "ID del cluster asignado a la zona (0, 1, 2, ..., k-1)" }
+      ]
+    }
+  }
+}

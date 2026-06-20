@@ -69,30 +69,55 @@ Revisar estructura y calidad del CSV localmente antes de enviarlo al cluster.
 ### Comando
 
 ```powershell
-# Desde la raiz del proyecto, con Python local
+# El script detecta automaticamente el archivo data_*.csv en el directorio actual
 python scripts/sample/inspect_sample.py
+
+# O indicar el archivo explicitamente:
+python scripts/sample/inspect_sample.py --input data_Mayo_2026.csv
 ```
 
 > **Importante:** este script se ejecuta localmente con `python`, NO con `spark-submit` ni dentro de ningun contenedor. No requiere que el cluster este activo.
 
+### Sobre los nombres de columna
+
+El dataset oficial de Datos Abiertos Peru **no incluye cabecera** en el CSV. Eso es lo esperado.
+El script muestra los 25 nombres de campo segun el catalogo oficial del dataset de consumo electrico junto con una muestra del valor real de cada columna en la primera fila. Esos mismos nombres son los que `explore_puno.py` asigna internamente al leer el archivo en Spark.
+
 ### Que hace
-- Detecta el separador del archivo.
-- Cuenta columnas y muestra filas de ejemplo.
-- Permite detectar problemas de estructura antes de cargar a HDFS.
+- Auto-detecta el archivo `data_*.csv` si no se indica `--input`.
+- Detecta el separador (debe ser `;`).
+- Muestra los 25 nombres oficiales de campo junto al valor de la primera fila.
+- Reporta si todas las filas tienen 25 columnas.
+- Alerta si hay filas con cantidad distinta de columnas (CSV corrupto).
 
 ## 5. Subir el CSV a HDFS
 
 ### Proposito
 Centralizar el archivo mensual en almacenamiento distribuido para que todo el flujo trabaje sobre la misma fuente.
 
-### Comando
+### Comando (ejemplo con Mayo)
 
 ```powershell
 docker cp .\data_Mayo_2026.csv namenode:/tmp/data_Mayo_2026.csv
 docker exec namenode hdfs dfs -put -f /tmp/data_Mayo_2026.csv /user/hadoop/electropuno/raw/
 ```
 
-> Para cargar otro mes, repetir el proceso reemplazando el nombre del archivo (ej. `data_Junio_2026.csv`). Todos los meses coexisten en `/raw/`.
+### Para agregar mas meses
+
+Repetir los pasos 4 y 5 con cada archivo nuevo antes de correr el MapReduce.
+Todos los archivos coexisten en `/raw/` y el job MapReduce los procesa todos juntos.
+
+```powershell
+# Ejemplo: agregar Junio
+python scripts/sample/inspect_sample.py --input data_Junio_2026.csv
+docker cp .\data_Junio_2026.csv namenode:/tmp/data_Junio_2026.csv
+docker exec namenode hdfs dfs -put -f /tmp/data_Junio_2026.csv /user/hadoop/electropuno/raw/
+
+# Verificar que ambos archivos esten en HDFS
+docker exec namenode hdfs dfs -ls /user/hadoop/electropuno/raw/
+```
+
+> El MapReduce del paso 6 lee **toda la carpeta** `/raw/`, por lo que automaticamente incluye todos los meses que esten ahi al momento de ejecutarlo.
 
 ### Que hace
 - Copia el CSV local al contenedor `namenode`.

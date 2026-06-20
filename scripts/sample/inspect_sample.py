@@ -5,6 +5,10 @@ Objetivo:
 - contar columnas,
 - revisar una muestra de filas,
 - y marcar posibles problemas de estructura.
+
+Nota sobre cabecera: el dataset oficial de Datos Abiertos Peru no incluye
+cabecera en el CSV. El script asigna nombres de referencia segun el
+catalogo oficial del dataset de consumo electrico.
 """
 
 from __future__ import annotations
@@ -15,12 +19,43 @@ from collections import Counter
 from pathlib import Path
 
 
+# Nombres de columnas segun el catalogo oficial del dataset abierto.
+# El CSV fisico NO las incluye, pero se asignan en los scripts de Explore.
+OFFICIAL_COLUMN_NAMES = [
+    "fecha_corte",
+    "numero_servicio_anonimizado",
+    "nombre_servicio_anonimizado",
+    "direccion_anonimizada",
+    "numero_identidad_anonimizado",
+    "tipo_documento_identificacion",
+    "codigo_empresa",
+    "nombre_empresa",
+    "codigo_unidad_negocio",
+    "nombre_unidad_negocio",
+    "periodo_facturado",
+    "tarifa",
+    "departamento",
+    "provincia",
+    "distrito",
+    "ubigeo",
+    "tipo_documento_facturacion",
+    "numero_documento_facturacion",
+    "tipo_cartera",
+    "fecha_vencimiento",
+    "fecha_emision",
+    "fecha_inicio_facturacion",
+    "fecha_fin_facturacion",
+    "importe_soles",
+    "consumo_kwh",
+]
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Inspeccion local de muestra del CSV")
     parser.add_argument(
         "--input",
-        default="data.csv",
-        help="Ruta del CSV local",
+        default=None,
+        help="Ruta del CSV local. Si se omite, busca automaticamente archivos data_*.csv en el directorio actual.",
     )
     parser.add_argument(
         "--sample-size",
@@ -31,9 +66,25 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--has-header",
         action="store_true",
-        help="Indica si el CSV tiene cabecera",
+        help="Indica si el CSV tiene cabecera (por defecto: sin cabecera)",
     )
     return parser.parse_args()
+
+
+def find_csv_file() -> Path:
+    """Busca automaticamente un archivo data_*.csv en el directorio actual."""
+    cwd = Path.cwd()
+    candidates = sorted(cwd.glob("data_*.csv"))
+    if candidates:
+        return candidates[0]
+    # Fallback: cualquier CSV en el directorio
+    any_csv = sorted(cwd.glob("*.csv"))
+    if any_csv:
+        return any_csv[0]
+    raise FileNotFoundError(
+        "No se encontro ningun archivo CSV en el directorio actual.\n"
+        "Especifica la ruta con:  python scripts/sample/inspect_sample.py --input <archivo>.csv"
+    )
 
 
 def detect_delimiter(lines: list[str]) -> str:
@@ -69,47 +120,61 @@ def read_sample(path: Path, sample_size: int) -> tuple[str, list[list[str]]]:
 
 def main() -> None:
     args = parse_args()
-    path = Path(args.input)
 
-    if not path.exists():
-        raise FileNotFoundError(f"No existe el archivo: {path}")
+    if args.input:
+        path = Path(args.input)
+        if not path.exists():
+            raise FileNotFoundError(f"No existe el archivo: {path}")
+    else:
+        path = find_csv_file()
+        print(f"[auto-deteccion] usando: {path.name}")
 
     delimiter, rows = read_sample(path, args.sample_size)
 
-    print(f"Archivo: {path}")
-    print(f"Separador detectado: {repr(delimiter)}")
-    print(f"Filas muestreadas: {len(rows)}")
+    print(f"\nArchivo     : {path}")
+    print(f"Separador   : {repr(delimiter)}")
+    print(f"Filas leidas: {len(rows)}")
 
     field_counts = Counter(len(row) for row in rows)
-    print(f"Distribucion de columnas por fila: {dict(field_counts)}")
+    print(f"Columnas por fila: {dict(field_counts)}")
 
     if args.has_header and rows:
         header = rows[0]
         data_rows = rows[1:]
-        print("Cabecera detectada:")
-        print(header)
+        print("\nCabecera detectada en el archivo:")
+        for i, col in enumerate(header, 1):
+            print(f"  {i:>2}. {col}")
     else:
-        header = [f"campo_{index:02d}" for index in range(1, max(len(row) for row in rows) + 1)]
+        n_cols = max(len(row) for row in rows)
         data_rows = rows
-        print("No se asumio cabecera. Columnas sugeridas:")
-        print(header)
 
-    print("\nPrimeras filas:")
-    for index, row in enumerate(data_rows[:5], start=1):
-        print(f"{index}: {row}")
+        print("\nEl CSV no tiene cabecera (comportamiento esperado del dataset oficial).")
+        print("Nombres de campo segun catalogo oficial:")
+        print(f"{'#':>4}  {'Nombre oficial':<40}  {'Muestra (fila 1)'}")
+        print("-" * 75)
+        first_row = data_rows[0] if data_rows else []
+        for i in range(n_cols):
+            nombre = OFFICIAL_COLUMN_NAMES[i] if i < len(OFFICIAL_COLUMN_NAMES) else f"campo_{i+1:02d}"
+            muestra = first_row[i][:35] if i < len(first_row) else ""
+            print(f"  {i+1:>2}. {nombre:<40}  {muestra}")
+
+    print("\nPrimeras 3 filas completas:")
+    for index, row in enumerate(data_rows[:3], start=1):
+        print(f"  Fila {index}: {row}")
 
     if rows:
         expected_fields = max(len(row) for row in rows)
-        inconsistent_rows = [i + 1 for i, row in enumerate(rows) if len(row) != expected_fields]
-        if inconsistent_rows:
-            print(f"\nFilas con cantidad de columnas distinta al maximo ({expected_fields}): {inconsistent_rows}")
+        inconsistent = [i + 1 for i, row in enumerate(rows) if len(row) != expected_fields]
+        if inconsistent:
+            print(f"\nFILAS CON COLUMNAS DISTINTAS al maximo ({expected_fields}): {inconsistent}")
         else:
-            print(f"\nTodas las filas muestreadas tienen {expected_fields} columnas.")
+            print(f"\nTodas las filas muestreadas tienen {expected_fields} columnas. Estructura consistente.")
 
-    print("\nSugerencia tecnica:")
-    print("- Si la estructura es consistente, pasa el archivo a Spark para el Explore formal.")
-    print("- Si encuentras campos inutiles o textos cualitativos repetitivos, descartar o agrupar antes del modelado.")
+    print("\nSugerencia:")
+    print("- Si la estructura es consistente y el separador es ';', el CSV esta listo para subir a HDFS.")
+    print("- Sube el archivo con:  docker cp <archivo>.csv namenode:/tmp/<archivo>.csv")
 
 
 if __name__ == "__main__":
     main()
+
