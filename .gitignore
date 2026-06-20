@@ -1,8 +1,13 @@
 .venv/
 data.csv
+data_*.csv
 __pycache__/
 *.pyc
 *.pyo
 *.log
 .DS_Store
 .env
+
+# Salidas locales del Assess (generadas al correr los scripts)
+output/*.csv
+output/plots/

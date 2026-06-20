@@ -1,0 +1,2 @@
+# este archivo mantiene la carpeta output/ en git
+# los CSVs y graficos generados estan excluidos por .gitignore

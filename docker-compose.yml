@@ -7,8 +7,8 @@ services:
     container_name: namenode
     restart: always
     ports:
-      - "9870:9870" 
-      - "9000:9000" 
+      - "9870:9870" # Interfaz Web de HDFS (Revisar archivos desde Windows)
+      - "9000:9000" # Puerto de comunicación RPC interna de HDFS
     volumes:
       - hadoop_namenode:/hadoop/dfs/name
     environment:
@@ -71,11 +71,12 @@ services:
     depends_on:
       - namenode
     ports:
-      - "8080:8080" 
-      - "7077:7077"
+      - "8080:8080" # Interfaz Web de Spark Master
+      - "7077:7077" # Puerto de conexión Spark Master
     volumes:
       - ./scripts:/opt/work/scripts
       - ./ubigeo_map.json:/opt/work/ubigeo_map.json
+      - ./output:/opt/work/output
     environment:
       - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
       - SPARK_DAEMON_MEMORY=1g

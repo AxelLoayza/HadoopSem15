@@ -232,20 +232,54 @@ docker exec spark-master /spark/bin/spark-submit /opt/work/scripts/model/model_r
 ## 11. Ejecutar Assess
 
 ### Proposito
-Comparar metricas, revisar residuos y cerrar la seleccion del modelo.
+Comparar metricas entre todos los modelos, revisar residuos y exportar los datos necesarios para generar graficos localmente.
 
-### Comando
+### Comando (en Docker)
 
 ```powershell
 docker exec spark-master /spark/bin/spark-submit /opt/work/scripts/model/assess_model_puno.py
 ```
 
 ### Que hace
-- Revisa RMSE, MAE y R2 para regresion y Random Forest.
-- Revisa silhouette para KMeans cuando corresponde.
-- Resume la conclusion tecnica de la etapa.
+- Revisa RMSE, MAE y R2 para regresion lineal y Random Forest.
+- Revisa silhouette para KMeans.
+- Imprime la tabla comparativa con interpretacion automatica del modelo ganador.
+- Exporta CSVs a `./output/` (via el bind mount):
+  - `output/metrics_summary.csv` — metricas de los tres modelos
+  - `output/regression_predictions.csv` — predicciones de regresion con error
+  - `output/rf_predictions.csv` — predicciones de Random Forest con error
+  - `output/kmeans_predictions.csv` — asignaciones de cluster por zona
 
-## 12. Publicar el proyecto en GitHub
+## 12. Generar graficos localmente
+
+### Proposito
+Visualizar los resultados del Assess con graficos guardados como PNG en `./output/plots/`.
+
+### Requisito previo (una sola vez)
+
+```powershell
+pip install -r requirements.txt
+```
+
+### Comando
+
+```powershell
+python scripts/assess/plot_results.py
+```
+
+### Que genera
+
+| Archivo | Contenido |
+|---------|-----------|
+| `comparativa_modelos.png` | Barras RMSE / MAE / R2 para regresion vs RF |
+| `regresion_predicho_vs_real.png` | Scatter predicho vs real con linea perfecta |
+| `regresion_residuos.png` | Histograma de residuos de regresion |
+| `rf_predicho_vs_real.png` | Scatter predicho vs real para Random Forest |
+| `kmeans_clusters.png` | Distribucion de zonas y consumo promedio por cluster |
+
+Todos los graficos quedan en `./output/plots/` y se pueden abrir directamente en Windows.
+
+## 13. Publicar el proyecto en GitHub
 
 ### Proposito
 Dejar el material documentado y compartible en el repositorio remoto.
@@ -266,7 +300,7 @@ git push -u origin main --force-with-lease
 - Registra los cambios del proyecto.
 - Sube el contenido al repositorio GitHub.
 
-## 13. Observacion importante
+## 14. Observacion importante
 
 No se debe subir `data_<Mes>_2026.csv` ni `.venv` al repositorio.
 La data grande queda local o en HDFS, y el entorno de Python se excluye con `.gitignore`.
