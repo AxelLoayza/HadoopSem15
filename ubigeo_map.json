@@ -1,0 +1,2478 @@
+{
+  "source": {
+    "name": "UBIGEO Peru",
+    "description": "Estructura oficial: region/departamento, provincia y distrito. Fuente de referencia: UBIGEO/INEI; verificacion de estructura con Wikipedia y la data observada del CSV.",
+    "rule": "Los dos primeros digitos identifican la region o departamento; los dos siguientes la provincia; los dos ultimos el distrito."
+  },
+  "levels": {
+    "region_or_department": {
+      "length": 2,
+      "description": "Agrupacion amplia por region."
+    },
+    "province": {
+      "length": 4,
+      "description": "Agrupacion intermedia; mejor para segmentacion que la region."
+    },
+    "district": {
+      "length": 6,
+      "description": "Nivel mas detallado y util para la data observada."
+    }
+  },
+  "observed": {
+    "ubigeo_count": 199,
+    "region_count": 13,
+    "province_count": 64
+  },
+  "regions": {
+    "20": {
+      "department": "Piura",
+      "ubigeos": [
+        "200101",
+        "200115",
+        "200104",
+        "200210",
+        "200206",
+        "200706",
+        "200105",
+        "200401",
+        "200405",
+        "200202",
+        "200504",
+        "200601",
+        "200501",
+        "200701",
+        "200114",
+        "200201",
+        "200301",
+        "200107",
+        "200307",
+        "200108",
+        "200404",
+        "200705",
+        "200702",
+        "200703",
+        "200308",
+        "200704",
+        "200408",
+        "200406",
+        "200305",
+        "200407",
+        "200604",
+        "200410",
+        "200403",
+        "200409",
+        "200304",
+        "200302",
+        "200402",
+        "200607",
+        "200303",
+        "200605",
+        "200603",
+        "200204",
+        "200306",
+        "200111",
+        "200208",
+        "200606",
+        "200801",
+        "200602",
+        "200110",
+        "200805",
+        "200207",
+        "200109",
+        "200203",
+        "200505",
+        "200506",
+        "200205",
+        "200803",
+        "200806",
+        "200802",
+        "200503",
+        "200209",
+        "200608",
+        "200804",
+        "200502",
+        "200507"
+      ]
+    },
+    "12": {
+      "department": "Junin",
+      "ubigeos": [
+        "120701",
+        "120808",
+        "120101",
+        "120902",
+        "120502",
+        "120114",
+        "120901",
+        "120130",
+        "120125"
+      ]
+    },
+    "14": {
+      "department": "Lambayeque",
+      "ubigeos": [
+        "140106",
+        "140301",
+        "140311",
+        "140206",
+        "140105",
+        "140101",
+        "140111",
+        "140108",
+        "140120",
+        "140112",
+        "140308",
+        "140113",
+        "140116",
+        "140306",
+        "140304",
+        "140305",
+        "140205",
+        "140118",
+        "140310",
+        "140103",
+        "140203",
+        "140312",
+        "140307"
+      ]
+    },
+    "15": {
+      "department": "Lima",
+      "ubigeos": [
+        "150101",
+        "150131",
+        "150112",
+        "150122",
+        "150143",
+        "150140",
+        "150115",
+        "150103",
+        "150113",
+        "150130",
+        "150120"
+      ]
+    },
+    "24": {
+      "department": "Tumbes",
+      "ubigeos": [
+        "240101",
+        "240102",
+        "240105",
+        "240201",
+        "240104",
+        "240106",
+        "240301",
+        "240203",
+        "240304",
+        "240202",
+        "240103",
+        "240302",
+        "240303"
+      ]
+    },
+    "06": {
+      "department": "Cajamarca",
+      "ubigeos": [
+        "060401",
+        "061301",
+        "061304",
+        "060601",
+        "060613",
+        "060701",
+        "060614",
+        "060101",
+        "060301",
+        "060413",
+        "060801",
+        "060201"
+      ]
+    },
+    "13": {
+      "department": "La Libertad",
+      "ubigeos": [
+        "130104",
+        "130704",
+        "130504",
+        "130111",
+        "130101",
+        "130106",
+        "130206",
+        "130107",
+        "130403",
+        "130109",
+        "130105",
+        "130801",
+        "130102",
+        "130201",
+        "130205",
+        "130601",
+        "130701",
+        "130401",
+        "131001",
+        "131203",
+        "131102"
+      ]
+    },
+    "02": {
+      "department": "Ancash",
+      "ubigeos": [
+        "021809",
+        "020101",
+        "021603",
+        "021101",
+        "020507",
+        "021204",
+        "021007",
+        "020801",
+        "021702",
+        "021601",
+        "020105",
+        "021201"
+      ]
+    },
+    "05": {
+      "department": "Ayacucho",
+      "ubigeos": [
+        "050202",
+        "051101",
+        "050401",
+        "050106",
+        "050101",
+        "051105",
+        "050102",
+        "050115",
+        "051104",
+        "050110"
+      ]
+    },
+    "19": {
+      "department": "Pasco",
+      "ubigeos": [
+        "190306",
+        "190307",
+        "190207",
+        "190301",
+        "190113"
+      ]
+    },
+    "10": {
+      "department": "Huanuco",
+      "ubigeos": [
+        "100101",
+        "100108",
+        "100601",
+        "100111",
+        "100701",
+        "100102",
+        "101104",
+        "100507"
+      ]
+    },
+    "09": {
+      "department": "Huancavelica",
+      "ubigeos": [
+        "090301",
+        "090717",
+        "090507",
+        "090504",
+        "090508",
+        "090117",
+        "090108",
+        "090502",
+        "090105"
+      ]
+    },
+    "01": {
+      "department": "Amazonas",
+      "ubigeos": [
+        "010509"
+      ]
+    }
+  },
+  "provinces": {
+    "2001": {
+      "department": "Piura",
+      "province": "Piura",
+      "ubigeos": [
+        "200101",
+        "200115",
+        "200104",
+        "200105",
+        "200114",
+        "200107",
+        "200108",
+        "200111",
+        "200110",
+        "200109"
+      ]
+    },
+    "2002": {
+      "department": "Piura",
+      "province": "Ayabaca",
+      "ubigeos": [
+        "200210",
+        "200206",
+        "200202",
+        "200201",
+        "200204",
+        "200208",
+        "200207",
+        "200203",
+        "200205",
+        "200209"
+      ]
+    },
+    "2007": {
+      "department": "Piura",
+      "province": "Talara",
+      "ubigeos": [
+        "200706",
+        "200701",
+        "200705",
+        "200702",
+        "200703",
+        "200704"
+      ]
+    },
+    "2004": {
+      "department": "Piura",
+      "province": "Morropon",
+      "ubigeos": [
+        "200401",
+        "200405",
+        "200404",
+        "200408",
+        "200406",
+        "200407",
+        "200410",
+        "200403",
+        "200409",
+        "200402"
+      ]
+    },
+    "1207": {
+      "department": "Junin",
+      "province": "Tarma",
+      "ubigeos": [
+        "120701"
+      ]
+    },
+    "2005": {
+      "department": "Piura",
+      "province": "Paita",
+      "ubigeos": [
+        "200504",
+        "200501",
+        "200505",
+        "200506",
+        "200503",
+        "200502",
+        "200507"
+      ]
+    },
+    "2006": {
+      "department": "Piura",
+      "province": "Sullana",
+      "ubigeos": [
+        "200601",
+        "200604",
+        "200607",
+        "200605",
+        "200603",
+        "200606",
+        "200602",
+        "200608"
+      ]
+    },
+    "1401": {
+      "department": "Lambayeque",
+      "province": "Chiclayo",
+      "ubigeos": [
+        "140106",
+        "140105",
+        "140101",
+        "140111",
+        "140108",
+        "140120",
+        "140112",
+        "140113",
+        "140116",
+        "140118",
+        "140103"
+      ]
+    },
+    "1501": {
+      "department": "Lima",
+      "province": "Lima",
+      "ubigeos": [
+        "150101",
+        "150131",
+        "150112",
+        "150122",
+        "150143",
+        "150140",
+        "150115",
+        "150103",
+        "150113",
+        "150130",
+        "150120"
+      ]
+    },
+    "2003": {
+      "department": "Piura",
+      "province": "Huancabamba",
+      "ubigeos": [
+        "200301",
+        "200307",
+        "200308",
+        "200305",
+        "200304",
+        "200302",
+        "200303",
+        "200306"
+      ]
+    },
+    "2401": {
+      "department": "Tumbes",
+      "province": "Tumbes",
+      "ubigeos": [
+        "240101",
+        "240102",
+        "240105",
+        "240104",
+        "240106",
+        "240103"
+      ]
+    },
+    "2402": {
+      "department": "Tumbes",
+      "province": "Contralmirante Villar",
+      "ubigeos": [
+        "240201",
+        "240203",
+        "240202"
+      ]
+    },
+    "2403": {
+      "department": "Tumbes",
+      "province": "Zarumilla",
+      "ubigeos": [
+        "240301",
+        "240304",
+        "240302",
+        "240303"
+      ]
+    },
+    "0604": {
+      "department": "Cajamarca",
+      "province": "Chota",
+      "ubigeos": [
+        "060401",
+        "060413"
+      ]
+    },
+    "1301": {
+      "department": "La Libertad",
+      "province": "Trujillo",
+      "ubigeos": [
+        "130104",
+        "130111",
+        "130101",
+        "130106",
+        "130107",
+        "130109",
+        "130105",
+        "130102"
+      ]
+    },
+    "0218": {
+      "department": "Ancash",
+      "province": "Santa",
+      "ubigeos": [
+        "021809"
+      ]
+    },
+    "0613": {
+      "department": "Cajamarca",
+      "province": "Santa Cruz",
+      "ubigeos": [
+        "061301",
+        "061304"
+      ]
+    },
+    "1307": {
+      "department": "La Libertad",
+      "province": "Pacasmayo",
+      "ubigeos": [
+        "130704",
+        "130701"
+      ]
+    },
+    "1305": {
+      "department": "La Libertad",
+      "province": "Julcan",
+      "ubigeos": [
+        "130504"
+      ]
+    },
+    "0201": {
+      "department": "Ancash",
+      "province": "Huaraz",
+      "ubigeos": [
+        "020101",
+        "020105"
+      ]
+    },
+    "2008": {
+      "department": "Piura",
+      "province": "Sechura",
+      "ubigeos": [
+        "200801",
+        "200805",
+        "200803",
+        "200806",
+        "200802",
+        "200804"
+      ]
+    },
+    "1403": {
+      "department": "Lambayeque",
+      "province": "Lambayeque",
+      "ubigeos": [
+        "140301",
+        "140311",
+        "140308",
+        "140306",
+        "140304",
+        "140305",
+        "140310",
+        "140312",
+        "140307"
+      ]
+    },
+    "1402": {
+      "department": "Lambayeque",
+      "province": "Ferreñafe",
+      "ubigeos": [
+        "140206",
+        "140205",
+        "140203"
+      ]
+    },
+    "1302": {
+      "department": "La Libertad",
+      "province": "Ascope",
+      "ubigeos": [
+        "130206",
+        "130201",
+        "130205"
+      ]
+    },
+    "0502": {
+      "department": "Ayacucho",
+      "province": "Cangallo",
+      "ubigeos": [
+        "050202"
+      ]
+    },
+    "0606": {
+      "department": "Cajamarca",
+      "province": "Cutervo",
+      "ubigeos": [
+        "060601",
+        "060613",
+        "060614"
+      ]
+    },
+    "1208": {
+      "department": "Junin",
+      "province": "Yauli",
+      "ubigeos": [
+        "120808"
+      ]
+    },
+    "0216": {
+      "department": "Ancash",
+      "province": "Pomabamba",
+      "ubigeos": [
+        "021603",
+        "021601"
+      ]
+    },
+    "1903": {
+      "department": "Pasco",
+      "province": "Oxapampa",
+      "ubigeos": [
+        "190306",
+        "190307",
+        "190301"
+      ]
+    },
+    "1201": {
+      "department": "Junin",
+      "province": "Huancayo",
+      "ubigeos": [
+        "120101",
+        "120114",
+        "120130",
+        "120125"
+      ]
+    },
+    "0511": {
+      "department": "Ayacucho",
+      "province": "Vilcas Huaman",
+      "ubigeos": [
+        "051101",
+        "051105",
+        "051104"
+      ]
+    },
+    "1001": {
+      "department": "Huanuco",
+      "province": "Huanuco",
+      "ubigeos": [
+        "100101",
+        "100108",
+        "100111",
+        "100102"
+      ]
+    },
+    "0504": {
+      "department": "Ayacucho",
+      "province": "Huanta",
+      "ubigeos": [
+        "050401"
+      ]
+    },
+    "1304": {
+      "department": "La Libertad",
+      "province": "Chepen",
+      "ubigeos": [
+        "130403",
+        "130401"
+      ]
+    },
+    "1209": {
+      "department": "Junin",
+      "province": "Chupaca",
+      "ubigeos": [
+        "120902",
+        "120901"
+      ]
+    },
+    "0211": {
+      "department": "Ancash",
+      "province": "Huarmey",
+      "ubigeos": [
+        "021101"
+      ]
+    },
+    "0205": {
+      "department": "Ancash",
+      "province": "Bolognesi",
+      "ubigeos": [
+        "020507"
+      ]
+    },
+    "0607": {
+      "department": "Cajamarca",
+      "province": "Hualgayoc",
+      "ubigeos": [
+        "060701"
+      ]
+    },
+    "0903": {
+      "department": "Huancavelica",
+      "province": "Angaraes",
+      "ubigeos": [
+        "090301"
+      ]
+    },
+    "1006": {
+      "department": "Huanuco",
+      "province": "Leoncio Prado",
+      "ubigeos": [
+        "100601"
+      ]
+    },
+    "0601": {
+      "department": "Cajamarca",
+      "province": "Cajamarca",
+      "ubigeos": [
+        "060101"
+      ]
+    },
+    "1308": {
+      "department": "La Libertad",
+      "province": "Pataz",
+      "ubigeos": [
+        "130801"
+      ]
+    },
+    "0501": {
+      "department": "Ayacucho",
+      "province": "Huamanga",
+      "ubigeos": [
+        "050106",
+        "050101",
+        "050102",
+        "050115",
+        "050110"
+      ]
+    },
+    "0212": {
+      "department": "Ancash",
+      "province": "Huaylas",
+      "ubigeos": [
+        "021204",
+        "021201"
+      ]
+    },
+    "0907": {
+      "department": "Huancavelica",
+      "province": "Tayacaja",
+      "ubigeos": [
+        "090717"
+      ]
+    },
+    "0905": {
+      "department": "Huancavelica",
+      "province": "Churcampa",
+      "ubigeos": [
+        "090507",
+        "090504",
+        "090508",
+        "090502"
+      ]
+    },
+    "1007": {
+      "department": "Huanuco",
+      "province": "Marañon",
+      "ubigeos": [
+        "100701"
+      ]
+    },
+    "1205": {
+      "department": "Junin",
+      "province": "Junin",
+      "ubigeos": [
+        "120502"
+      ]
+    },
+    "0603": {
+      "department": "Cajamarca",
+      "province": "Celendin",
+      "ubigeos": [
+        "060301"
+      ]
+    },
+    "0901": {
+      "department": "Huancavelica",
+      "province": "Huancavelica",
+      "ubigeos": [
+        "090117",
+        "090108",
+        "090105"
+      ]
+    },
+    "1011": {
+      "department": "Huanuco",
+      "province": "Yarowilca",
+      "ubigeos": [
+        "101104"
+      ]
+    },
+    "0210": {
+      "department": "Ancash",
+      "province": "Huari",
+      "ubigeos": [
+        "021007"
+      ]
+    },
+    "1306": {
+      "department": "La Libertad",
+      "province": "Otuzco",
+      "ubigeos": [
+        "130601"
+      ]
+    },
+    "0608": {
+      "department": "Cajamarca",
+      "province": "Jaen",
+      "ubigeos": [
+        "060801"
+      ]
+    },
+    "1902": {
+      "department": "Pasco",
+      "province": "Daniel Alcides Carrión",
+      "ubigeos": [
+        "190207"
+      ]
+    },
+    "0602": {
+      "department": "Cajamarca",
+      "province": "Cajabamba",
+      "ubigeos": [
+        "060201"
+      ]
+    },
+    "0208": {
+      "department": "Ancash",
+      "province": "Casma",
+      "ubigeos": [
+        "020801"
+      ]
+    },
+    "0217": {
+      "department": "Ancash",
+      "province": "Recuay",
+      "ubigeos": [
+        "021702"
+      ]
+    },
+    "1310": {
+      "department": "La Libertad",
+      "province": "Santiago de Chuco",
+      "ubigeos": [
+        "131001"
+      ]
+    },
+    "1005": {
+      "department": "Huanuco",
+      "province": "Huamalies",
+      "ubigeos": [
+        "100507"
+      ]
+    },
+    "0105": {
+      "department": "Amazonas",
+      "province": "Luya",
+      "ubigeos": [
+        "010509"
+      ]
+    },
+    "1312": {
+      "department": "La Libertad",
+      "province": "Viru",
+      "ubigeos": [
+        "131203"
+      ]
+    },
+    "1311": {
+      "department": "La Libertad",
+      "province": "Gran Chimu",
+      "ubigeos": [
+        "131102"
+      ]
+    },
+    "1901": {
+      "department": "Pasco",
+      "province": "Pasco",
+      "ubigeos": [
+        "190113"
+      ]
+    }
+  },
+  "districts": {
+    "200101": {
+      "region_code": "20",
+      "province_code": "2001",
+      "district_code": "200101",
+      "department": "Piura",
+      "province": "Piura",
+      "district": "Piura"
+    },
+    "200115": {
+      "region_code": "20",
+      "province_code": "2001",
+      "district_code": "200115",
+      "department": "Piura",
+      "province": "Piura",
+      "district": "26 de Octubre"
+    },
+    "200104": {
+      "region_code": "20",
+      "province_code": "2001",
+      "district_code": "200104",
+      "department": "Piura",
+      "province": "Piura",
+      "district": "Castilla"
+    },
+    "200210": {
+      "region_code": "20",
+      "province_code": "2002",
+      "district_code": "200210",
+      "department": "Piura",
+      "province": "Ayabaca",
+      "district": "Suyo"
+    },
+    "200206": {
+      "region_code": "20",
+      "province_code": "2002",
+      "district_code": "200206",
+      "department": "Piura",
+      "province": "Ayabaca",
+      "district": "Pacaipampa"
+    },
+    "200706": {
+      "region_code": "20",
+      "province_code": "2007",
+      "district_code": "200706",
+      "department": "Piura",
+      "province": "Talara",
+      "district": "Máncora"
+    },
+    "200105": {
+      "region_code": "20",
+      "province_code": "2001",
+      "district_code": "200105",
+      "department": "Piura",
+      "province": "Piura",
+      "district": "Catacaos"
+    },
+    "200401": {
+      "region_code": "20",
+      "province_code": "2004",
+      "district_code": "200401",
+      "department": "Piura",
+      "province": "Morropon",
+      "district": "Chulucanas"
+    },
+    "200405": {
+      "region_code": "20",
+      "province_code": "2004",
+      "district_code": "200405",
+      "department": "Piura",
+      "province": "Morropon",
+      "district": "Morropón"
+    },
+    "120701": {
+      "region_code": "12",
+      "province_code": "1207",
+      "district_code": "120701",
+      "department": "Junin",
+      "province": "Tarma",
+      "district": "Tarma"
+    },
+    "200202": {
+      "region_code": "20",
+      "province_code": "2002",
+      "district_code": "200202",
+      "department": "Piura",
+      "province": "Ayabaca",
+      "district": "Frias"
+    },
+    "200504": {
+      "region_code": "20",
+      "province_code": "2005",
+      "district_code": "200504",
+      "department": "Piura",
+      "province": "Paita",
+      "district": "Colán"
+    },
+    "200601": {
+      "region_code": "20",
+      "province_code": "2006",
+      "district_code": "200601",
+      "department": "Piura",
+      "province": "Sullana",
+      "district": "Sullana"
+    },
+    "200501": {
+      "region_code": "20",
+      "province_code": "2005",
+      "district_code": "200501",
+      "department": "Piura",
+      "province": "Paita",
+      "district": "Paita"
+    },
+    "200701": {
+      "region_code": "20",
+      "province_code": "2007",
+      "district_code": "200701",
+      "department": "Piura",
+      "province": "Talara",
+      "district": "Pariñas"
+    },
+    "200114": {
+      "region_code": "20",
+      "province_code": "2001",
+      "district_code": "200114",
+      "department": "Piura",
+      "province": "Piura",
+      "district": "Tambogrande"
+    },
+    "140106": {
+      "region_code": "14",
+      "province_code": "1401",
+      "district_code": "140106",
+      "department": "Lambayeque",
+      "province": "Chiclayo",
+      "district": "La victoria"
+    },
+    "200201": {
+      "region_code": "20",
+      "province_code": "2002",
+      "district_code": "200201",
+      "department": "Piura",
+      "province": "Ayabaca",
+      "district": "Ayabaca"
+    },
+    "150101": {
+      "region_code": "15",
+      "province_code": "1501",
+      "district_code": "150101",
+      "department": "Lima",
+      "province": "Lima",
+      "district": "Lima"
+    },
+    "200301": {
+      "region_code": "20",
+      "province_code": "2003",
+      "district_code": "200301",
+      "department": "Piura",
+      "province": "Huancabamba",
+      "district": "Huancabamba"
+    },
+    "200107": {
+      "region_code": "20",
+      "province_code": "2001",
+      "district_code": "200107",
+      "department": "Piura",
+      "province": "Piura",
+      "district": "Cura Mori"
+    },
+    "150131": {
+      "region_code": "15",
+      "province_code": "1501",
+      "district_code": "150131",
+      "department": "Lima",
+      "province": "Lima",
+      "district": "San Isidro"
+    },
+    "240101": {
+      "region_code": "24",
+      "province_code": "2401",
+      "district_code": "240101",
+      "department": "Tumbes",
+      "province": "Tumbes",
+      "district": "Tumbes"
+    },
+    "200307": {
+      "region_code": "20",
+      "province_code": "2003",
+      "district_code": "200307",
+      "department": "Piura",
+      "province": "Huancabamba",
+      "district": "Sóndor"
+    },
+    "240102": {
+      "region_code": "24",
+      "province_code": "2401",
+      "district_code": "240102",
+      "department": "Tumbes",
+      "province": "Tumbes",
+      "district": "Corrales"
+    },
+    "200108": {
+      "region_code": "20",
+      "province_code": "2001",
+      "district_code": "200108",
+      "department": "Piura",
+      "province": "Piura",
+      "district": "El Tallán"
+    },
+    "240105": {
+      "region_code": "24",
+      "province_code": "2401",
+      "district_code": "240105",
+      "department": "Tumbes",
+      "province": "Tumbes",
+      "district": "San Jacinto"
+    },
+    "200404": {
+      "region_code": "20",
+      "province_code": "2004",
+      "district_code": "200404",
+      "department": "Piura",
+      "province": "Morropon",
+      "district": "La Matanza"
+    },
+    "200705": {
+      "region_code": "20",
+      "province_code": "2007",
+      "district_code": "200705",
+      "department": "Piura",
+      "province": "Talara",
+      "district": "Los Organos"
+    },
+    "200702": {
+      "region_code": "20",
+      "province_code": "2007",
+      "district_code": "200702",
+      "department": "Piura",
+      "province": "Talara",
+      "district": "El Alto"
+    },
+    "200703": {
+      "region_code": "20",
+      "province_code": "2007",
+      "district_code": "200703",
+      "department": "Piura",
+      "province": "Talara",
+      "district": "La Brea"
+    },
+    "150112": {
+      "region_code": "15",
+      "province_code": "1501",
+      "district_code": "150112",
+      "department": "Lima",
+      "province": "Lima",
+      "district": "Independencia"
+    },
+    "200308": {
+      "region_code": "20",
+      "province_code": "2003",
+      "district_code": "200308",
+      "department": "Piura",
+      "province": "Huancabamba",
+      "district": "Sondorillo"
+    },
+    "240201": {
+      "region_code": "24",
+      "province_code": "2402",
+      "district_code": "240201",
+      "department": "Tumbes",
+      "province": "Contralmirante Villar",
+      "district": "Zorritos"
+    },
+    "200704": {
+      "region_code": "20",
+      "province_code": "2007",
+      "district_code": "200704",
+      "department": "Piura",
+      "province": "Talara",
+      "district": "Lobitos"
+    },
+    "240104": {
+      "region_code": "24",
+      "province_code": "2401",
+      "district_code": "240104",
+      "department": "Tumbes",
+      "province": "Tumbes",
+      "district": "Pampas de Hospital"
+    },
+    "240106": {
+      "region_code": "24",
+      "province_code": "2401",
+      "district_code": "240106",
+      "department": "Tumbes",
+      "province": "Tumbes",
+      "district": "San Juan de la Virgen"
+    },
+    "240301": {
+      "region_code": "24",
+      "province_code": "2403",
+      "district_code": "240301",
+      "department": "Tumbes",
+      "province": "Zarumilla",
+      "district": "Zarumilla"
+    },
+    "240203": {
+      "region_code": "24",
+      "province_code": "2402",
+      "district_code": "240203",
+      "department": "Tumbes",
+      "province": "Contralmirante Villar",
+      "district": "Canoas de Punta Sal"
+    },
+    "060401": {
+      "region_code": "06",
+      "province_code": "0604",
+      "district_code": "060401",
+      "department": "Cajamarca",
+      "province": "Chota",
+      "district": "Chota"
+    },
+    "130104": {
+      "region_code": "13",
+      "province_code": "1301",
+      "district_code": "130104",
+      "department": "La Libertad",
+      "province": "Trujillo",
+      "district": "Huanchaco"
+    },
+    "200408": {
+      "region_code": "20",
+      "province_code": "2004",
+      "district_code": "200408",
+      "department": "Piura",
+      "province": "Morropon",
+      "district": "Santa Catalina de Mossa"
+    },
+    "021809": {
+      "region_code": "02",
+      "province_code": "0218",
+      "district_code": "021809",
+      "department": "Ancash",
+      "province": "Santa",
+      "district": "Nuevo chimbote"
+    },
+    "240304": {
+      "region_code": "24",
+      "province_code": "2403",
+      "district_code": "240304",
+      "department": "Tumbes",
+      "province": "Zarumilla",
+      "district": "Papayal"
+    },
+    "200406": {
+      "region_code": "20",
+      "province_code": "2004",
+      "district_code": "200406",
+      "department": "Piura",
+      "province": "Morropon",
+      "district": "Salitral"
+    },
+    "061301": {
+      "region_code": "06",
+      "province_code": "0613",
+      "district_code": "061301",
+      "department": "Cajamarca",
+      "province": "Santa Cruz",
+      "district": "Santa cruz"
+    },
+    "200305": {
+      "region_code": "20",
+      "province_code": "2003",
+      "district_code": "200305",
+      "department": "Piura",
+      "province": "Huancabamba",
+      "district": "Lalaquiz"
+    },
+    "200407": {
+      "region_code": "20",
+      "province_code": "2004",
+      "district_code": "200407",
+      "department": "Piura",
+      "province": "Morropon",
+      "district": "San Juan de Bigote"
+    },
+    "130704": {
+      "region_code": "13",
+      "province_code": "1307",
+      "district_code": "130704",
+      "department": "La Libertad",
+      "province": "Pacasmayo",
+      "district": "Pacasmayo"
+    },
+    "200604": {
+      "region_code": "20",
+      "province_code": "2006",
+      "district_code": "200604",
+      "department": "Piura",
+      "province": "Sullana",
+      "district": "Lancones"
+    },
+    "200410": {
+      "region_code": "20",
+      "province_code": "2004",
+      "district_code": "200410",
+      "department": "Piura",
+      "province": "Morropon",
+      "district": "Yamango"
+    },
+    "200403": {
+      "region_code": "20",
+      "province_code": "2004",
+      "district_code": "200403",
+      "department": "Piura",
+      "province": "Morropon",
+      "district": "Chalaco"
+    },
+    "200409": {
+      "region_code": "20",
+      "province_code": "2004",
+      "district_code": "200409",
+      "department": "Piura",
+      "province": "Morropon",
+      "district": "Santo Domingo"
+    },
+    "240202": {
+      "region_code": "24",
+      "province_code": "2402",
+      "district_code": "240202",
+      "department": "Tumbes",
+      "province": "Contralmirante Villar",
+      "district": "Casitas"
+    },
+    "240103": {
+      "region_code": "24",
+      "province_code": "2401",
+      "district_code": "240103",
+      "department": "Tumbes",
+      "province": "Tumbes",
+      "district": "La Cruz"
+    },
+    "200304": {
+      "region_code": "20",
+      "province_code": "2003",
+      "district_code": "200304",
+      "department": "Piura",
+      "province": "Huancabamba",
+      "district": "Huarmaca"
+    },
+    "200302": {
+      "region_code": "20",
+      "province_code": "2003",
+      "district_code": "200302",
+      "department": "Piura",
+      "province": "Huancabamba",
+      "district": "Canchaque"
+    },
+    "200402": {
+      "region_code": "20",
+      "province_code": "2004",
+      "district_code": "200402",
+      "department": "Piura",
+      "province": "Morropon",
+      "district": "Buenos Aires"
+    },
+    "200607": {
+      "region_code": "20",
+      "province_code": "2006",
+      "district_code": "200607",
+      "department": "Piura",
+      "province": "Sullana",
+      "district": "Querecotillo"
+    },
+    "200303": {
+      "region_code": "20",
+      "province_code": "2003",
+      "district_code": "200303",
+      "department": "Piura",
+      "province": "Huancabamba",
+      "district": "El Carmen de la Frontera"
+    },
+    "240302": {
+      "region_code": "24",
+      "province_code": "2403",
+      "district_code": "240302",
+      "department": "Tumbes",
+      "province": "Zarumilla",
+      "district": "Aguas Verdes"
+    },
+    "130504": {
+      "region_code": "13",
+      "province_code": "1305",
+      "district_code": "130504",
+      "department": "La Libertad",
+      "province": "Julcan",
+      "district": "Huaso"
+    },
+    "150122": {
+      "region_code": "15",
+      "province_code": "1501",
+      "district_code": "150122",
+      "department": "Lima",
+      "province": "Lima",
+      "district": "Miraflores"
+    },
+    "200605": {
+      "region_code": "20",
+      "province_code": "2006",
+      "district_code": "200605",
+      "department": "Piura",
+      "province": "Sullana",
+      "district": "Marcavelica"
+    },
+    "200603": {
+      "region_code": "20",
+      "province_code": "2006",
+      "district_code": "200603",
+      "department": "Piura",
+      "province": "Sullana",
+      "district": "Ignacio Escudero"
+    },
+    "200204": {
+      "region_code": "20",
+      "province_code": "2002",
+      "district_code": "200204",
+      "department": "Piura",
+      "province": "Ayabaca",
+      "district": "Lagunas"
+    },
+    "020101": {
+      "region_code": "02",
+      "province_code": "0201",
+      "district_code": "020101",
+      "department": "Ancash",
+      "province": "Huaraz",
+      "district": "Huaraz"
+    },
+    "200306": {
+      "region_code": "20",
+      "province_code": "2003",
+      "district_code": "200306",
+      "department": "Piura",
+      "province": "Huancabamba",
+      "district": "San Miguel de El Faique"
+    },
+    "200111": {
+      "region_code": "20",
+      "province_code": "2001",
+      "district_code": "200111",
+      "department": "Piura",
+      "province": "Piura",
+      "district": "Las Lomas"
+    },
+    "200208": {
+      "region_code": "20",
+      "province_code": "2002",
+      "district_code": "200208",
+      "department": "Piura",
+      "province": "Ayabaca",
+      "district": "Sapillica"
+    },
+    "130111": {
+      "region_code": "13",
+      "province_code": "1301",
+      "district_code": "130111",
+      "department": "La Libertad",
+      "province": "Trujillo",
+      "district": "Victor Larco Herrera"
+    },
+    "200606": {
+      "region_code": "20",
+      "province_code": "2006",
+      "district_code": "200606",
+      "department": "Piura",
+      "province": "Sullana",
+      "district": "Miguel Checa"
+    },
+    "200801": {
+      "region_code": "20",
+      "province_code": "2008",
+      "district_code": "200801",
+      "department": "Piura",
+      "province": "Sechura",
+      "district": "Sechura"
+    },
+    "130101": {
+      "region_code": "13",
+      "province_code": "1301",
+      "district_code": "130101",
+      "department": "La Libertad",
+      "province": "Trujillo",
+      "district": "Trujillo"
+    },
+    "200602": {
+      "region_code": "20",
+      "province_code": "2006",
+      "district_code": "200602",
+      "department": "Piura",
+      "province": "Sullana",
+      "district": "Bellavista"
+    },
+    "200110": {
+      "region_code": "20",
+      "province_code": "2001",
+      "district_code": "200110",
+      "department": "Piura",
+      "province": "Piura",
+      "district": "La Unión"
+    },
+    "200805": {
+      "region_code": "20",
+      "province_code": "2008",
+      "district_code": "200805",
+      "department": "Piura",
+      "province": "Sechura",
+      "district": "Vice"
+    },
+    "200207": {
+      "region_code": "20",
+      "province_code": "2002",
+      "district_code": "200207",
+      "department": "Piura",
+      "province": "Ayabaca",
+      "district": "Paimas"
+    },
+    "200109": {
+      "region_code": "20",
+      "province_code": "2001",
+      "district_code": "200109",
+      "department": "Piura",
+      "province": "Piura",
+      "district": "La Arena"
+    },
+    "140301": {
+      "region_code": "14",
+      "province_code": "1403",
+      "district_code": "140301",
+      "department": "Lambayeque",
+      "province": "Lambayeque",
+      "district": "Lambayeque"
+    },
+    "140311": {
+      "region_code": "14",
+      "province_code": "1403",
+      "district_code": "140311",
+      "department": "Lambayeque",
+      "province": "Lambayeque",
+      "district": "San jose"
+    },
+    "200203": {
+      "region_code": "20",
+      "province_code": "2002",
+      "district_code": "200203",
+      "department": "Piura",
+      "province": "Ayabaca",
+      "district": "Jililí"
+    },
+    "200505": {
+      "region_code": "20",
+      "province_code": "2005",
+      "district_code": "200505",
+      "department": "Piura",
+      "province": "Paita",
+      "district": "La Huaca"
+    },
+    "200506": {
+      "region_code": "20",
+      "province_code": "2005",
+      "district_code": "200506",
+      "department": "Piura",
+      "province": "Paita",
+      "district": "Tamarindo"
+    },
+    "200205": {
+      "region_code": "20",
+      "province_code": "2002",
+      "district_code": "200205",
+      "department": "Piura",
+      "province": "Ayabaca",
+      "district": "Montero"
+    },
+    "200803": {
+      "region_code": "20",
+      "province_code": "2008",
+      "district_code": "200803",
+      "department": "Piura",
+      "province": "Sechura",
+      "district": "Bernal"
+    },
+    "200806": {
+      "region_code": "20",
+      "province_code": "2008",
+      "district_code": "200806",
+      "department": "Piura",
+      "province": "Sechura",
+      "district": "Rinconada Llicuar"
+    },
+    "130106": {
+      "region_code": "13",
+      "province_code": "1301",
+      "district_code": "130106",
+      "department": "La Libertad",
+      "province": "Trujillo",
+      "district": "Laredo"
+    },
+    "150143": {
+      "region_code": "15",
+      "province_code": "1501",
+      "district_code": "150143",
+      "department": "Lima",
+      "province": "Lima",
+      "district": "Villa Maria del Triunfo"
+    },
+    "061304": {
+      "region_code": "06",
+      "province_code": "0613",
+      "district_code": "061304",
+      "department": "Cajamarca",
+      "province": "Santa Cruz",
+      "district": "Chancaybaños"
+    },
+    "200802": {
+      "region_code": "20",
+      "province_code": "2008",
+      "district_code": "200802",
+      "department": "Piura",
+      "province": "Sechura",
+      "district": "Bellavista de la Unión"
+    },
+    "140206": {
+      "region_code": "14",
+      "province_code": "1402",
+      "district_code": "140206",
+      "department": "Lambayeque",
+      "province": "Ferreñafe",
+      "district": "Pueblo nuevo"
+    },
+    "140105": {
+      "region_code": "14",
+      "province_code": "1401",
+      "district_code": "140105",
+      "department": "Lambayeque",
+      "province": "Chiclayo",
+      "district": "José leonardo ortíz"
+    },
+    "130206": {
+      "region_code": "13",
+      "province_code": "1302",
+      "district_code": "130206",
+      "department": "La Libertad",
+      "province": "Ascope",
+      "district": "Razuri"
+    },
+    "200503": {
+      "region_code": "20",
+      "province_code": "2005",
+      "district_code": "200503",
+      "department": "Piura",
+      "province": "Paita",
+      "district": "Arenal"
+    },
+    "050202": {
+      "region_code": "05",
+      "province_code": "0502",
+      "district_code": "050202",
+      "department": "Ayacucho",
+      "province": "Cangallo",
+      "district": "Chuschi"
+    },
+    "200209": {
+      "region_code": "20",
+      "province_code": "2002",
+      "district_code": "200209",
+      "department": "Piura",
+      "province": "Ayabaca",
+      "district": "Sícchez"
+    },
+    "140101": {
+      "region_code": "14",
+      "province_code": "1401",
+      "district_code": "140101",
+      "department": "Lambayeque",
+      "province": "Chiclayo",
+      "district": "Chiclayo"
+    },
+    "140111": {
+      "region_code": "14",
+      "province_code": "1401",
+      "district_code": "140111",
+      "department": "Lambayeque",
+      "province": "Chiclayo",
+      "district": "Picsi"
+    },
+    "140108": {
+      "region_code": "14",
+      "province_code": "1401",
+      "district_code": "140108",
+      "department": "Lambayeque",
+      "province": "Chiclayo",
+      "district": "Monsefu"
+    },
+    "060601": {
+      "region_code": "06",
+      "province_code": "0606",
+      "district_code": "060601",
+      "department": "Cajamarca",
+      "province": "Cutervo",
+      "district": "Cutervo"
+    },
+    "120808": {
+      "region_code": "12",
+      "province_code": "1208",
+      "district_code": "120808",
+      "department": "Junin",
+      "province": "Yauli",
+      "district": "Santa Rosa de Sacco"
+    },
+    "140120": {
+      "region_code": "14",
+      "province_code": "1401",
+      "district_code": "140120",
+      "department": "Lambayeque",
+      "province": "Chiclayo",
+      "district": "Tuman"
+    },
+    "021603": {
+      "region_code": "02",
+      "province_code": "0216",
+      "district_code": "021603",
+      "department": "Ancash",
+      "province": "Pomabamba",
+      "district": "Parobamba"
+    },
+    "190306": {
+      "region_code": "19",
+      "province_code": "1903",
+      "district_code": "190306",
+      "department": "Pasco",
+      "province": "Oxapampa",
+      "district": "Puerto bermudez"
+    },
+    "140112": {
+      "region_code": "14",
+      "province_code": "1401",
+      "district_code": "140112",
+      "department": "Lambayeque",
+      "province": "Chiclayo",
+      "district": "Pimentel"
+    },
+    "140308": {
+      "region_code": "14",
+      "province_code": "1403",
+      "district_code": "140308",
+      "department": "Lambayeque",
+      "province": "Lambayeque",
+      "district": "Olmos"
+    },
+    "140113": {
+      "region_code": "14",
+      "province_code": "1401",
+      "district_code": "140113",
+      "department": "Lambayeque",
+      "province": "Chiclayo",
+      "district": "Reque"
+    },
+    "200608": {
+      "region_code": "20",
+      "province_code": "2006",
+      "district_code": "200608",
+      "department": "Piura",
+      "province": "Sullana",
+      "district": "Salitral"
+    },
+    "150140": {
+      "region_code": "15",
+      "province_code": "1501",
+      "district_code": "150140",
+      "department": "Lima",
+      "province": "Lima",
+      "district": "Santiago de Surco"
+    },
+    "120101": {
+      "region_code": "12",
+      "province_code": "1201",
+      "district_code": "120101",
+      "department": "Junin",
+      "province": "Huancayo",
+      "district": "Huancayo"
+    },
+    "130107": {
+      "region_code": "13",
+      "province_code": "1301",
+      "district_code": "130107",
+      "department": "La Libertad",
+      "province": "Trujillo",
+      "district": "Moche"
+    },
+    "150115": {
+      "region_code": "15",
+      "province_code": "1501",
+      "district_code": "150115",
+      "department": "Lima",
+      "province": "Lima",
+      "district": "La Victoria"
+    },
+    "051101": {
+      "region_code": "05",
+      "province_code": "0511",
+      "district_code": "051101",
+      "department": "Ayacucho",
+      "province": "Vilcas Huaman",
+      "district": "Vilcas huaman"
+    },
+    "100101": {
+      "region_code": "10",
+      "province_code": "1001",
+      "district_code": "100101",
+      "department": "Huanuco",
+      "province": "Huanuco",
+      "district": "Huanuco"
+    },
+    "200804": {
+      "region_code": "20",
+      "province_code": "2008",
+      "district_code": "200804",
+      "department": "Piura",
+      "province": "Sechura",
+      "district": "Cristo Nos Valga"
+    },
+    "150103": {
+      "region_code": "15",
+      "province_code": "1501",
+      "district_code": "150103",
+      "department": "Lima",
+      "province": "Lima",
+      "district": "Ate"
+    },
+    "050401": {
+      "region_code": "05",
+      "province_code": "0504",
+      "district_code": "050401",
+      "department": "Ayacucho",
+      "province": "Huanta",
+      "district": "Huanta"
+    },
+    "130403": {
+      "region_code": "13",
+      "province_code": "1304",
+      "district_code": "130403",
+      "department": "La Libertad",
+      "province": "Chepen",
+      "district": "Pueblo nuevo"
+    },
+    "060613": {
+      "region_code": "06",
+      "province_code": "0606",
+      "district_code": "060613",
+      "department": "Cajamarca",
+      "province": "Cutervo",
+      "district": "Santo tomas"
+    },
+    "130109": {
+      "region_code": "13",
+      "province_code": "1301",
+      "district_code": "130109",
+      "department": "La Libertad",
+      "province": "Trujillo",
+      "district": "Salaverry"
+    },
+    "100108": {
+      "region_code": "10",
+      "province_code": "1001",
+      "district_code": "100108",
+      "department": "Huanuco",
+      "province": "Huanuco",
+      "district": "San pedro de chaulan"
+    },
+    "120902": {
+      "region_code": "12",
+      "province_code": "1209",
+      "district_code": "120902",
+      "department": "Junin",
+      "province": "Chupaca",
+      "district": "Ahuac"
+    },
+    "021101": {
+      "region_code": "02",
+      "province_code": "0211",
+      "district_code": "021101",
+      "department": "Ancash",
+      "province": "Huarmey",
+      "district": "Huarmey"
+    },
+    "020507": {
+      "region_code": "02",
+      "province_code": "0205",
+      "district_code": "020507",
+      "department": "Ancash",
+      "province": "Bolognesi",
+      "district": "Colquioc"
+    },
+    "130105": {
+      "region_code": "13",
+      "province_code": "1301",
+      "district_code": "130105",
+      "department": "La Libertad",
+      "province": "Trujillo",
+      "district": "La Esperanza"
+    },
+    "060701": {
+      "region_code": "06",
+      "province_code": "0607",
+      "district_code": "060701",
+      "department": "Cajamarca",
+      "province": "Hualgayoc",
+      "district": "Bambamarca"
+    },
+    "140116": {
+      "region_code": "14",
+      "province_code": "1401",
+      "district_code": "140116",
+      "department": "Lambayeque",
+      "province": "Chiclayo",
+      "district": "Cayalti"
+    },
+    "090301": {
+      "region_code": "09",
+      "province_code": "0903",
+      "district_code": "090301",
+      "department": "Huancavelica",
+      "province": "Angaraes",
+      "district": "Lircay"
+    },
+    "060614": {
+      "region_code": "06",
+      "province_code": "0606",
+      "district_code": "060614",
+      "department": "Cajamarca",
+      "province": "Cutervo",
+      "district": "Socota"
+    },
+    "240303": {
+      "region_code": "24",
+      "province_code": "2403",
+      "district_code": "240303",
+      "department": "Tumbes",
+      "province": "Zarumilla",
+      "district": "Matapalo"
+    },
+    "100601": {
+      "region_code": "10",
+      "province_code": "1006",
+      "district_code": "100601",
+      "department": "Huanuco",
+      "province": "Leoncio Prado",
+      "district": "Rupa-rupa"
+    },
+    "140306": {
+      "region_code": "14",
+      "province_code": "1403",
+      "district_code": "140306",
+      "department": "Lambayeque",
+      "province": "Lambayeque",
+      "district": "Morrope"
+    },
+    "060101": {
+      "region_code": "06",
+      "province_code": "0601",
+      "district_code": "060101",
+      "department": "Cajamarca",
+      "province": "Cajamarca",
+      "district": "Cajamarca"
+    },
+    "130801": {
+      "region_code": "13",
+      "province_code": "1308",
+      "district_code": "130801",
+      "department": "La Libertad",
+      "province": "Pataz",
+      "district": "Tayabamba"
+    },
+    "050106": {
+      "region_code": "05",
+      "province_code": "0501",
+      "district_code": "050106",
+      "department": "Ayacucho",
+      "province": "Huamanga",
+      "district": "Ocros"
+    },
+    "130102": {
+      "region_code": "13",
+      "province_code": "1301",
+      "district_code": "130102",
+      "department": "La Libertad",
+      "province": "Trujillo",
+      "district": "El Porvenir"
+    },
+    "050101": {
+      "region_code": "05",
+      "province_code": "0501",
+      "district_code": "050101",
+      "department": "Ayacucho",
+      "province": "Huamanga",
+      "district": "Ayacucho"
+    },
+    "021204": {
+      "region_code": "02",
+      "province_code": "0212",
+      "district_code": "021204",
+      "department": "Ancash",
+      "province": "Huaylas",
+      "district": "Huaylas"
+    },
+    "090717": {
+      "region_code": "09",
+      "province_code": "0907",
+      "district_code": "090717",
+      "department": "Huancavelica",
+      "province": "Tayacaja",
+      "district": "Surcubamba"
+    },
+    "150113": {
+      "region_code": "15",
+      "province_code": "1501",
+      "district_code": "150113",
+      "department": "Lima",
+      "province": "Lima",
+      "district": "Jesus Maria"
+    },
+    "140304": {
+      "region_code": "14",
+      "province_code": "1403",
+      "district_code": "140304",
+      "department": "Lambayeque",
+      "province": "Lambayeque",
+      "district": "Jayanca"
+    },
+    "090507": {
+      "region_code": "09",
+      "province_code": "0905",
+      "district_code": "090507",
+      "department": "Huancavelica",
+      "province": "Churcampa",
+      "district": "Paucarbamba"
+    },
+    "100111": {
+      "region_code": "10",
+      "province_code": "1001",
+      "district_code": "100111",
+      "department": "Huanuco",
+      "province": "Huanuco",
+      "district": "PILLCO MARCA"
+    },
+    "190307": {
+      "region_code": "19",
+      "province_code": "1903",
+      "district_code": "190307",
+      "department": "Pasco",
+      "province": "Oxapampa",
+      "district": "Villa rica"
+    },
+    "100701": {
+      "region_code": "10",
+      "province_code": "1007",
+      "district_code": "100701",
+      "department": "Huanuco",
+      "province": "Marañon",
+      "district": "Huacrachuco"
+    },
+    "120502": {
+      "region_code": "12",
+      "province_code": "1205",
+      "district_code": "120502",
+      "department": "Junin",
+      "province": "Junin",
+      "district": "Carhuamayo"
+    },
+    "051105": {
+      "region_code": "05",
+      "province_code": "0511",
+      "district_code": "051105",
+      "department": "Ayacucho",
+      "province": "Vilcas Huaman",
+      "district": "Huambalpa"
+    },
+    "060301": {
+      "region_code": "06",
+      "province_code": "0603",
+      "district_code": "060301",
+      "department": "Cajamarca",
+      "province": "Celendin",
+      "district": "Celendin"
+    },
+    "090504": {
+      "region_code": "09",
+      "province_code": "0905",
+      "district_code": "090504",
+      "department": "Huancavelica",
+      "province": "Churcampa",
+      "district": "El carmen"
+    },
+    "060413": {
+      "region_code": "06",
+      "province_code": "0604",
+      "district_code": "060413",
+      "department": "Cajamarca",
+      "province": "Chota",
+      "district": "Paccha"
+    },
+    "120114": {
+      "region_code": "12",
+      "province_code": "1201",
+      "district_code": "120114",
+      "department": "Junin",
+      "province": "Huancayo",
+      "district": "El tambo"
+    },
+    "050102": {
+      "region_code": "05",
+      "province_code": "0501",
+      "district_code": "050102",
+      "department": "Ayacucho",
+      "province": "Huamanga",
+      "district": "Acocro"
+    },
+    "150130": {
+      "region_code": "15",
+      "province_code": "1501",
+      "district_code": "150130",
+      "department": "Lima",
+      "province": "Lima",
+      "district": "San Borja"
+    },
+    "090508": {
+      "region_code": "09",
+      "province_code": "0905",
+      "district_code": "090508",
+      "department": "Huancavelica",
+      "province": "Churcampa",
+      "district": "San miguel de mayocc"
+    },
+    "100102": {
+      "region_code": "10",
+      "province_code": "1001",
+      "district_code": "100102",
+      "department": "Huanuco",
+      "province": "Huanuco",
+      "district": "Amarilis"
+    },
+    "130201": {
+      "region_code": "13",
+      "province_code": "1302",
+      "district_code": "130201",
+      "department": "La Libertad",
+      "province": "Ascope",
+      "district": "Ascope"
+    },
+    "090117": {
+      "region_code": "09",
+      "province_code": "0901",
+      "district_code": "090117",
+      "department": "Huancavelica",
+      "province": "Huancavelica",
+      "district": "Yauli"
+    },
+    "130205": {
+      "region_code": "13",
+      "province_code": "1302",
+      "district_code": "130205",
+      "department": "La Libertad",
+      "province": "Ascope",
+      "district": "Paijan"
+    },
+    "050115": {
+      "region_code": "05",
+      "province_code": "0501",
+      "district_code": "050115",
+      "department": "Ayacucho",
+      "province": "Huamanga",
+      "district": "Jesus Nazareno"
+    },
+    "140305": {
+      "region_code": "14",
+      "province_code": "1403",
+      "district_code": "140305",
+      "department": "Lambayeque",
+      "province": "Lambayeque",
+      "district": "Mochumi"
+    },
+    "101104": {
+      "region_code": "10",
+      "province_code": "1011",
+      "district_code": "101104",
+      "department": "Huanuco",
+      "province": "Yarowilca",
+      "district": "Chupan"
+    },
+    "021007": {
+      "region_code": "02",
+      "province_code": "0210",
+      "district_code": "021007",
+      "department": "Ancash",
+      "province": "Huari",
+      "district": "Huachis"
+    },
+    "130601": {
+      "region_code": "13",
+      "province_code": "1306",
+      "district_code": "130601",
+      "department": "La Libertad",
+      "province": "Otuzco",
+      "district": "Otuzco"
+    },
+    "140205": {
+      "region_code": "14",
+      "province_code": "1402",
+      "district_code": "140205",
+      "department": "Lambayeque",
+      "province": "Ferreñafe",
+      "district": "Pitipo"
+    },
+    "060801": {
+      "region_code": "06",
+      "province_code": "0608",
+      "district_code": "060801",
+      "department": "Cajamarca",
+      "province": "Jaen",
+      "district": "Jaen"
+    },
+    "130701": {
+      "region_code": "13",
+      "province_code": "1307",
+      "district_code": "130701",
+      "department": "La Libertad",
+      "province": "Pacasmayo",
+      "district": "San pedro de lloc"
+    },
+    "120901": {
+      "region_code": "12",
+      "province_code": "1209",
+      "district_code": "120901",
+      "department": "Junin",
+      "province": "Chupaca",
+      "district": "Chupaca"
+    },
+    "140118": {
+      "region_code": "14",
+      "province_code": "1401",
+      "district_code": "140118",
+      "department": "Lambayeque",
+      "province": "Chiclayo",
+      "district": "Pomalca"
+    },
+    "190207": {
+      "region_code": "19",
+      "province_code": "1902",
+      "district_code": "190207",
+      "department": "Pasco",
+      "province": "Daniel Alcides Carrión",
+      "district": "Tapuc"
+    },
+    "060201": {
+      "region_code": "06",
+      "province_code": "0602",
+      "district_code": "060201",
+      "department": "Cajamarca",
+      "province": "Cajabamba",
+      "district": "Cajabamba"
+    },
+    "090108": {
+      "region_code": "09",
+      "province_code": "0901",
+      "district_code": "090108",
+      "department": "Huancavelica",
+      "province": "Huancavelica",
+      "district": "Izcuchaca"
+    },
+    "140310": {
+      "region_code": "14",
+      "province_code": "1403",
+      "district_code": "140310",
+      "department": "Lambayeque",
+      "province": "Lambayeque",
+      "district": "Salas"
+    },
+    "090502": {
+      "region_code": "09",
+      "province_code": "0905",
+      "district_code": "090502",
+      "department": "Huancavelica",
+      "province": "Churcampa",
+      "district": "Anco"
+    },
+    "130401": {
+      "region_code": "13",
+      "province_code": "1304",
+      "district_code": "130401",
+      "department": "La Libertad",
+      "province": "Chepen",
+      "district": "Chepen"
+    },
+    "150120": {
+      "region_code": "15",
+      "province_code": "1501",
+      "district_code": "150120",
+      "department": "Lima",
+      "province": "Lima",
+      "district": "Magdalena del Mar"
+    },
+    "020801": {
+      "region_code": "02",
+      "province_code": "0208",
+      "district_code": "020801",
+      "department": "Ancash",
+      "province": "Casma",
+      "district": "Casma"
+    },
+    "021702": {
+      "region_code": "02",
+      "province_code": "0217",
+      "district_code": "021702",
+      "department": "Ancash",
+      "province": "Recuay",
+      "district": "Catac"
+    },
+    "090105": {
+      "region_code": "09",
+      "province_code": "0901",
+      "district_code": "090105",
+      "department": "Huancavelica",
+      "province": "Huancavelica",
+      "district": "Cuenca"
+    },
+    "051104": {
+      "region_code": "05",
+      "province_code": "0511",
+      "district_code": "051104",
+      "department": "Ayacucho",
+      "province": "Vilcas Huaman",
+      "district": "Concepcion"
+    },
+    "200502": {
+      "region_code": "20",
+      "province_code": "2005",
+      "district_code": "200502",
+      "department": "Piura",
+      "province": "Paita",
+      "district": "Amotape"
+    },
+    "131001": {
+      "region_code": "13",
+      "province_code": "1310",
+      "district_code": "131001",
+      "department": "La Libertad",
+      "province": "Santiago de Chuco",
+      "district": "Santiago de Chuco"
+    },
+    "190301": {
+      "region_code": "19",
+      "province_code": "1903",
+      "district_code": "190301",
+      "department": "Pasco",
+      "province": "Oxapampa",
+      "district": "Oxapampa"
+    },
+    "100507": {
+      "region_code": "10",
+      "province_code": "1005",
+      "district_code": "100507",
+      "department": "Huanuco",
+      "province": "Huamalies",
+      "district": "Monzon"
+    },
+    "050110": {
+      "region_code": "05",
+      "province_code": "0501",
+      "district_code": "050110",
+      "department": "Ayacucho",
+      "province": "Huamanga",
+      "district": "San juan bautista"
+    },
+    "010509": {
+      "region_code": "01",
+      "province_code": "0105",
+      "district_code": "010509",
+      "department": "Amazonas",
+      "province": "Luya",
+      "district": "Luya"
+    },
+    "200507": {
+      "region_code": "20",
+      "province_code": "2005",
+      "district_code": "200507",
+      "department": "Piura",
+      "province": "Paita",
+      "district": "Vichayal"
+    },
+    "131203": {
+      "region_code": "13",
+      "province_code": "1312",
+      "district_code": "131203",
+      "department": "La Libertad",
+      "province": "Viru",
+      "district": "Guadalupito"
+    },
+    "140103": {
+      "region_code": "14",
+      "province_code": "1401",
+      "district_code": "140103",
+      "department": "Lambayeque",
+      "province": "Chiclayo",
+      "district": "Eten"
+    },
+    "131102": {
+      "region_code": "13",
+      "province_code": "1311",
+      "district_code": "131102",
+      "department": "La Libertad",
+      "province": "Gran Chimu",
+      "district": "Lucma"
+    },
+    "021601": {
+      "region_code": "02",
+      "province_code": "0216",
+      "district_code": "021601",
+      "department": "Ancash",
+      "province": "Pomabamba",
+      "district": "Pomabamba"
+    },
+    "190113": {
+      "region_code": "19",
+      "province_code": "1901",
+      "district_code": "190113",
+      "department": "Pasco",
+      "province": "Pasco",
+      "district": "Yanacancha"
+    },
+    "120130": {
+      "region_code": "12",
+      "province_code": "1201",
+      "district_code": "120130",
+      "department": "Junin",
+      "province": "Huancayo",
+      "district": "San jeronimo de tunan"
+    },
+    "020105": {
+      "region_code": "02",
+      "province_code": "0201",
+      "district_code": "020105",
+      "department": "Ancash",
+      "province": "Huaraz",
+      "district": "Independencia"
+    },
+    "021201": {
+      "region_code": "02",
+      "province_code": "0212",
+      "district_code": "021201",
+      "department": "Ancash",
+      "province": "Huaylas",
+      "district": "Caraz"
+    },
+    "140203": {
+      "region_code": "14",
+      "province_code": "1402",
+      "district_code": "140203",
+      "department": "Lambayeque",
+      "province": "Ferreñafe",
+      "district": "Incahuasi"
+    },
+    "140312": {
+      "region_code": "14",
+      "province_code": "1403",
+      "district_code": "140312",
+      "department": "Lambayeque",
+      "province": "Lambayeque",
+      "district": "Tucume"
+    },
+    "120125": {
+      "region_code": "12",
+      "province_code": "1201",
+      "district_code": "120125",
+      "department": "Junin",
+      "province": "Huancayo",
+      "district": "Pilcomayo"
+    },
+    "140307": {
+      "region_code": "14",
+      "province_code": "1403",
+      "district_code": "140307",
+      "department": "Lambayeque",
+      "province": "Lambayeque",
+      "district": "Motupe"
+    }
+  },
+  "usage": {
+    "recommendation": "Para segmentacion, usar province o district. No usar ubigeo como variable numerica continua; convertirlo en categorias o prefijos.",
+    "examples": [
+      "200101 -> region_code 20, province_code 2001, district_code 200101",
+      "240301 -> region_code 24, province_code 2403, district_code 240301"
+    ]
+  }
+}

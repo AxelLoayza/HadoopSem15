@@ -1,0 +1,105 @@
+
+
+services:
+  # ----------------------------------------------------------------Fase S (Sample): Capa HDFS Storage
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: namenode
+    restart: always
+    ports:
+      - "9870:9870" 
+      - "9000:9000" 
+    volumes:
+      - hadoop_namenode:/hadoop/dfs/name
+    environment:
+      - CLUSTER_NAME=clusterelectropuno
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    env_file:
+      - ./hadoop.env
+
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode
+    restart: always
+    depends_on:
+      - namenode
+    ports:
+      - "9864:9864"
+    volumes:
+      - hadoop_datanode:/hadoop/dfs/data
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    env_file:
+      - ./hadoop.env
+
+  # ----------------------------------------------------------------Fase E/M (Explore/Modify): Orquestador YARN
+  resourcemanager:
+    image: bde2020/hadoop-resourcemanager:2.0.0-hadoop3.2.1-java8
+    container_name: resourcemanager
+    restart: always
+    depends_on:
+      - namenode
+      - datanode
+    ports:
+      - "8088:8088" # Interfaz Web de YARN (Monitorear Jobs de MapReduce/Spark)
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    env_file:
+      - ./hadoop.env
+
+  nodemanager:
+    image: bde2020/hadoop-nodemanager:2.0.0-hadoop3.2.1-java8
+    container_name: nodemanager
+    restart: always
+    depends_on:
+      - resourcemanager
+    ports:
+      - "8042:8042"
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    env_file:
+      - ./hadoop.env
+
+  # ----------------------------------------------------------------Fase M/A (Model/Assess): Capa de Cómputo Spark + K-Means
+  spark-master:
+    build:
+      context: .
+      dockerfile: docker/spark/Dockerfile
+    image: electropuno-spark:3.1.1-numpy
+    container_name: spark-master
+    restart: always
+    depends_on:
+      - namenode
+    ports:
+      - "8080:8080" 
+      - "7077:7077"
+    volumes:
+      - ./scripts:/opt/work/scripts
+      - ./ubigeo_map.json:/opt/work/ubigeo_map.json
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - SPARK_DAEMON_MEMORY=1g
+      - PYSPARK_PYTHON=/usr/bin/python3
+      - PYSPARK_DRIVER_PYTHON=/usr/bin/python3
+    env_file:
+      - ./hadoop.env
+
+  spark-worker:
+    image: electropuno-spark:3.1.1-numpy
+    container_name: spark-worker
+    restart: always
+    depends_on:
+      - spark-master
+    ports:
+      - "8081:8081"
+    environment:
+      - "SPARK_MASTER=spark://spark-master:7077"
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=1g
+      - PYSPARK_PYTHON=/usr/bin/python3
+    env_file:
+      - ./hadoop.env
+
+volumes:
+  hadoop_namenode:
+  hadoop_datanode:
