@@ -61,8 +61,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Modificacion y limpieza del CSV de Puno con Spark")
     parser.add_argument(
         "--input",
-        default="hdfs://namenode:9000/user/hadoop/electropuno/electropuno.csv",
-        help="Ruta del CSV de entrada, local o HDFS",
+        default="hdfs://namenode:9000/user/hadoop/electropuno/raw/",
+        help="Ruta del CSV de entrada, local o HDFS (puede ser carpeta con multiples CSVs)",
     )
     parser.add_argument(
         "--output",

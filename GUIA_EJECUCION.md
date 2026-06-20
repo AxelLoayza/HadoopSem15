@@ -8,7 +8,7 @@ Este documento ordena la ejecucion real del proyecto, desde el levantamiento de 
 - `docker-compose.yml` para definir Hadoop, HDFS, YARN y Spark.
 - Contenedor `namenode` para almacenar archivos en HDFS.
 - Contenedor `spark-master` para ejecutar los scripts de Spark.
-- Archivo local `data.csv` como fuente de datos crudos.
+- Archivo local `data_<Mes>_2026.csv` como fuente de datos crudos (ej. `data_Mayo_2026.csv`).
 - Carpeta `scripts/` para los scripts organizados por etapa SEMMA.
 - Repositorio GitHub `https://github.com/AxelLoayza/HadoopSem15` para publicar el proyecto.
 
@@ -45,79 +45,129 @@ docker exec namenode hdfs dfs -ls /
 - `docker ps` confirma que los contenedores estan arriba.
 - `hdfs dfs -ls /` valida que HDFS responde dentro del contenedor `namenode`.
 
-## 3. Crear la carpeta destino en HDFS
+## 3. Crear la estructura de carpetas en HDFS
 
 ### Proposito
-Preparar la ubicacion donde se almacenara el CSV para que Spark lo lea desde HDFS.
+Preparar las rutas donde se almacenaran CSVs crudos, la salida del MapReduce y las salidas Parquet.
 
 ### Comando
 
 ```powershell
-docker exec namenode hdfs dfs -mkdir -p /user/hadoop/electropuno
+docker exec namenode hdfs dfs -mkdir -p /user/hadoop/electropuno/raw
+docker exec namenode hdfs dfs -mkdir -p /user/hadoop/electropuno/mapreduce_agg
 ```
 
 ### Que hace
-- Crea la ruta base del proyecto dentro de HDFS.
-- Permite organizar la data por dominio y evitar mezclarla con otras cargas.
+- Crea `/raw/` para alojar los CSVs crudos mensuales (un archivo por mes).
+- Crea `/mapreduce_agg/` para la salida del job MapReduce (agregado por ubigeo y mes).
 
-## 4. Subir el CSV a HDFS
+## 4. Ejecutar la etapa Sample (local, antes de subir a HDFS)
 
 ### Proposito
-Centralizar el archivo de entrada en almacenamiento distribuido para que todo el flujo trabaje sobre la misma fuente.
+Revisar estructura y calidad del CSV localmente antes de enviarlo al cluster.
 
 ### Comando
 
 ```powershell
-docker cp .\data.csv namenode:/tmp/electropuno.csv
-docker exec namenode hdfs dfs -put -f /tmp/electropuno.csv /user/hadoop/electropuno/
+# Desde la raiz del proyecto, con Python local
+python scripts/sample/inspect_sample.py
 ```
 
+> **Importante:** este script se ejecuta localmente con `python`, NO con `spark-submit` ni dentro de ningun contenedor. No requiere que el cluster este activo.
+
 ### Que hace
-- Copia el archivo local al contenedor `namenode`.
-- Lo registra en HDFS bajo `/user/hadoop/electropuno/`.
+- Detecta el separador del archivo.
+- Cuenta columnas y muestra filas de ejemplo.
+- Permite detectar problemas de estructura antes de cargar a HDFS.
+
+## 5. Subir el CSV a HDFS
+
+### Proposito
+Centralizar el archivo mensual en almacenamiento distribuido para que todo el flujo trabaje sobre la misma fuente.
+
+### Comando
+
+```powershell
+docker cp .\data_Mayo_2026.csv namenode:/tmp/data_Mayo_2026.csv
+docker exec namenode hdfs dfs -put -f /tmp/data_Mayo_2026.csv /user/hadoop/electropuno/raw/
+```
+
+> Para cargar otro mes, repetir el proceso reemplazando el nombre del archivo (ej. `data_Junio_2026.csv`). Todos los meses coexisten en `/raw/`.
+
+### Que hace
+- Copia el CSV local al contenedor `namenode`.
+- Lo registra en HDFS bajo `/user/hadoop/electropuno/raw/`.
+- Para multiples meses, la carpeta `/raw/` acumula todos los archivos y el MapReduce los procesa juntos.
 
 ### Verificacion
 
 ```powershell
-docker exec namenode hdfs dfs -ls /user/hadoop/electropuno/
+docker exec namenode hdfs dfs -ls /user/hadoop/electropuno/raw/
 ```
 
-## 5. Ejecutar la etapa Sample
+## 6. Ejecutar el job MapReduce — E.1 de Explore
 
 ### Proposito
-Revisar una muestra local antes de lanzar Spark sobre toda la data.
+Agregar el consumo por zona (ubigeo) y mes antes de que Spark explore los datos.
+Permite ver de forma inmediata que zonas consumen mas, como evoluciona el consumo entre meses
+y si hay periodos con pocos registros o zonas que aparecen solo en algunos meses.
 
 ### Comando
 
 ```powershell
-docker exec spark-master /spark/bin/spark-submit /opt/work/scripts/sample/inspect_sample.py --input data.csv
+# 1. Copiar los scripts al namenode (no tiene el mount de ./scripts)
+docker cp scripts/explore/mapreduce/mapper.py namenode:/tmp/mapper.py
+docker cp scripts/explore/mapreduce/reducer.py namenode:/tmp/reducer.py
+
+# 2. Lanzar el job MapReduce desde el namenode
+docker exec namenode bash -c "
+  hadoop jar /opt/hadoop-3.2.1/share/hadoop/tools/lib/hadoop-streaming-3.2.1.jar \
+  -input /user/hadoop/electropuno/raw/ \
+  -output /user/hadoop/electropuno/mapreduce_agg \
+  -mapper 'python3 mapper.py' \
+  -reducer 'python3 reducer.py' \
+  -file /tmp/mapper.py \
+  -file /tmp/reducer.py
+"
 ```
 
-### Que hace
-- Detecta separador.
-- Revisa cantidad de columnas.
-- Muestra filas de ejemplo.
-- Permite detectar problemas de estructura antes del analisis distribuido.
+> `-file` distribuye el script al directorio de trabajo de cada tarea YARN; por eso se referencia solo por nombre (`mapper.py`), no por ruta absoluta.
 
-## 6. Ejecutar la etapa Explore
+> Si la carpeta ya existe de una corrida anterior, borrarla primero:
+> `docker exec namenode hdfs dfs -rm -r /user/hadoop/electropuno/mapreduce_agg`
+
+### Que hace
+- Lanza un job YARN MapReduce sobre toda la carpeta `/raw/` (todos los meses a la vez).
+- El mapper extrae ubigeo, mes, consumo_kwh e importe_soles de cada linea cruda.
+- El reducer suma consumo, importe y cuenta registros por zona y mes.
+- Produce una tabla TSV de pocas miles de filas: `ubigeo | mes | total_consumo_kwh | total_importe_soles | registros`.
+
+### Verificacion
+
+```powershell
+docker exec namenode hdfs dfs -ls /user/hadoop/electropuno/mapreduce_agg/
+docker exec namenode hdfs dfs -cat /user/hadoop/electropuno/mapreduce_agg/part-00000 | head -20
+```
+
+## 7. Ejecutar la etapa Explore — E.2 (analisis del agregado)
 
 ### Proposito
-Describir el dataset, detectar nulos, duplicados, categorias dominantes y enriquecer UBIGEO.
+Describir la distribucion de consumo por zona y periodo usando la tabla compacta producida por MapReduce.
 
 ### Comando
 
 ```powershell
-docker exec spark-master /spark/bin/spark-submit /opt/work/scripts/explore/explore_puno.py --input hdfs://namenode:9000/user/hadoop/electropuno/electropuno.csv
+docker exec spark-master /spark/bin/spark-submit /opt/work/scripts/explore/explore_mapreduce_output.py --input hdfs://namenode:9000/user/hadoop/electropuno/mapreduce_agg/
 ```
 
 ### Que hace
-- Lee el CSV desde HDFS.
-- Asigna nombres semanticos a las columnas.
-- Limpia texto.
-- Calcula nulos, repetidos y conteos distintos.
-- Enriquce la zona geografica con UBIGEO.
+- Lee la salida TSV del MapReduce (5 columnas: ubigeo, mes, total_consumo_kwh, total_importe_soles, registros).
+- Muestra las zonas con mayor y menor consumo.
+- Compara la evolucion del consumo por mes.
+- Detecta meses con pocos registros (posible archivo incompleto).
+- Enriquece con UBIGEO para mostrar nombres de region, provincia y distrito.
 
-## 7. Ejecutar la etapa Modify
+## 8. Ejecutar la etapa Modify
 
 ### Proposito
 Limpiar, tipar y transformar la informacion para dejarla lista para modelado.
@@ -125,8 +175,12 @@ Limpiar, tipar y transformar la informacion para dejarla lista para modelado.
 ### Comando
 
 ```powershell
-docker exec spark-master /spark/bin/spark-submit /opt/work/scripts/modify/modify_puno.py
+docker exec spark-master /spark/bin/spark-submit \
+  /opt/work/scripts/modify/modify_puno.py \
+  --input hdfs://namenode:9000/user/hadoop/electropuno/raw/
 ```
+
+> **Importante:** Modify lee los CSVs crudos desde `/user/hadoop/electropuno/raw/`, NO la salida del MapReduce. Esta es la fuente que garantiza las 25 columnas necesarias para el enriquecimiento completo.
 
 ### Que hace
 - Convierte fechas a tipo fecha.
@@ -141,7 +195,7 @@ docker exec namenode hdfs dfs -ls /user/hadoop/electropuno/modified_puno
 docker exec namenode hdfs dfs -count /user/hadoop/electropuno/modified_puno
 ```
 
-## 8. Construir el dataset para modelado
+## 9. Construir el dataset para modelado
 
 ### Proposito
 Agrupar la informacion por zona y periodo para crear una tabla analitica compacta.
@@ -157,7 +211,7 @@ docker exec spark-master /spark/bin/spark-submit /opt/work/scripts/model/build_m
 - Calcula consumo total, consumo promedio e importe total.
 - Genera el insumo principal de Model.
 
-## 9. Ejecutar el modelado
+## 10. Ejecutar el modelado
 
 ### Proposito
 Comparar el comportamiento del consumo con distintos enfoques de ML.
@@ -175,7 +229,7 @@ docker exec spark-master /spark/bin/spark-submit /opt/work/scripts/model/model_r
 - `model_kmeans_puno.py` segmenta zonas por comportamiento de consumo.
 - `model_random_forest_puno.py` sirve como benchmark comparativo.
 
-## 10. Ejecutar Assess
+## 11. Ejecutar Assess
 
 ### Proposito
 Comparar metricas, revisar residuos y cerrar la seleccion del modelo.
@@ -191,7 +245,7 @@ docker exec spark-master /spark/bin/spark-submit /opt/work/scripts/model/assess_
 - Revisa silhouette para KMeans cuando corresponde.
 - Resume la conclusion tecnica de la etapa.
 
-## 11. Publicar el proyecto en GitHub
+## 12. Publicar el proyecto en GitHub
 
 ### Proposito
 Dejar el material documentado y compartible en el repositorio remoto.
@@ -212,7 +266,7 @@ git push -u origin main --force-with-lease
 - Registra los cambios del proyecto.
 - Sube el contenido al repositorio GitHub.
 
-## 12. Observacion importante
+## 13. Observacion importante
 
-No se debe subir `data.csv` ni `.venv` al repositorio.
+No se debe subir `data_<Mes>_2026.csv` ni `.venv` al repositorio.
 La data grande queda local o en HDFS, y el entorno de Python se excluye con `.gitignore`.
