@@ -8,6 +8,7 @@ Proyecto de analisis de consumo electrico de Puno con Hadoop, HDFS, Spark y fluj
 - `data.csv` es la data base de trabajo.
 - `scripts/` contiene los scripts organizados por etapa.
 - `PLAN_ANALISIS_PUNO.md` y `PLAN_MODELO_PUNO.md` documentan la estrategia.
+- `GUIA_EJECUCION.md` explica el orden de ejecucion, recursos usados y proposito de cada paso.
 - `VITACORA_PROGRESO.md` registra avances y decisiones.
 
 ## Scripts por etapa
