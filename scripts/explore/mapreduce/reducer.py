@@ -53,7 +53,7 @@ def main():
         else:
             if current_key is not None:
                 ubigeo, mes = current_key.split("|", 1)
-                print(f"{ubigeo}\t{mes}\t{total_consumo:.4f}\t{total_importe:.4f}\t{total_registros}")
+                print("{}\t{}\t{:.4f}\t{:.4f}\t{}".format(ubigeo, mes, total_consumo, total_importe, total_registros))
             current_key = key
             total_consumo = consumo
             total_importe = importe
@@ -61,7 +61,7 @@ def main():
 
     if current_key is not None:
         ubigeo, mes = current_key.split("|", 1)
-        print(f"{ubigeo}\t{mes}\t{total_consumo:.4f}\t{total_importe:.4f}\t{total_registros}")
+        print("{}\t{}\t{:.4f}\t{:.4f}\t{}".format(ubigeo, mes, total_consumo, total_importe, total_registros))
 
 
 if __name__ == "__main__":

@@ -1,6 +1,40 @@
 # Guia de ejecucion del proyecto HadoopSem15
 
-Este documento ordena la ejecucion real del proyecto, desde el levantamiento de contenedores hasta la carga de datos, el analisis con Spark y la publicacion del repositorio.
+Este documento ordena la ejecucion real del proyecto, desde la preparacion del entorno local hasta el analisis distribuido con Spark y la publicacion del repositorio.
+
+## Prerequisitos de software
+
+Antes de ejecutar cualquier paso, verificar que el equipo tenga instalado:
+
+| Herramienta | Version minima | Proposito |
+|-------------|---------------|----------|
+| Python | 3.8 | Scripts locales (Sample, Assess/graficos) |
+| Docker Desktop | Cualquier version reciente | Cluster Hadoop/Spark en contenedores |
+| Git | Cualquier version | Control de versiones y push a GitHub |
+
+> En Windows, Docker Desktop debe estar corriendo antes del Paso 2.
+
+## Configuracion inicial del entorno Python (una sola vez)
+
+Los scripts locales (`inspect_sample.py`, `plot_results.py`) requieren un entorno virtual con pandas y matplotlib.
+Esta configuracion se hace una sola vez por maquina.
+
+```powershell
+# Posicionarse en la raiz del proyecto
+Set-Location "c:\Users\axtev\Documents\Proyects\Int de Negocios"
+
+# Crear el entorno virtual
+python -m venv .venv
+
+# Activar el entorno virtual
+.venv\Scripts\activate
+
+# Instalar dependencias locales
+pip install -r requirements.txt
+```
+
+> El entorno `.venv` esta excluido del repositorio por `.gitignore`.
+> Cada vez que abras una nueva terminal para usar scripts locales, debes activar el entorno con `.venv\Scripts\activate`.
 
 ## Recursos empleados
 
@@ -10,6 +44,7 @@ Este documento ordena la ejecucion real del proyecto, desde el levantamiento de 
 - Contenedor `spark-master` para ejecutar los scripts de Spark.
 - Archivo local `data_<Mes>_2026.csv` como fuente de datos crudos (ej. `data_Mayo_2026.csv`).
 - Carpeta `scripts/` para los scripts organizados por etapa SEMMA.
+- Entorno virtual `.venv/` con pandas y matplotlib para scripts locales.
 - Repositorio GitHub `https://github.com/AxelLoayza/HadoopSem15` para publicar el proyecto.
 
 ## 1. Levantar los contenedores
@@ -69,6 +104,9 @@ Revisar estructura y calidad del CSV localmente antes de enviarlo al cluster.
 ### Comando
 
 ```powershell
+# Activar el entorno virtual si no lo esta
+.venv\Scripts\activate
+
 # El script detecta automaticamente el archivo data_*.csv en el directorio actual
 python scripts/sample/inspect_sample.py
 
@@ -140,6 +178,13 @@ y si hay periodos con pocos registros o zonas que aparecen solo en algunos meses
 ### Comando
 
 ```powershell
+# 0. Si HDFS esta en safe mode, esperar a que salga antes de borrar la salida anterior
+docker exec namenode hdfs dfsadmin -safemode get
+docker exec namenode hdfs dfsadmin -safemode wait
+
+# 1. Borrar el output anterior si existe
+docker exec namenode hdfs dfs -rm -r /user/hadoop/electropuno/mapreduce_agg
+
 # 1. Copiar los scripts al namenode (no tiene el mount de ./scripts)
 docker cp scripts/explore/mapreduce/mapper.py namenode:/tmp/mapper.py
 docker cp scripts/explore/mapreduce/reducer.py namenode:/tmp/reducer.py
@@ -156,10 +201,18 @@ docker exec namenode bash -c "
 "
 ```
 
+> **Si el job falla con** `Cannot run program "python3"` **en el nodemanager**, significa que el contenedor no trae Python 3 instalado. En ese caso, hacer esta correccion manual una sola vez y volver a lanzar el job:
+
+```powershell
+docker exec nodemanager bash -c "echo 'deb http://archive.debian.org/debian stretch main' > /etc/apt/sources.list && echo 'deb http://archive.debian.org/debian-security stretch/updates main' >> /etc/apt/sources.list && apt-get update -qq && apt-get install -y python3 --no-install-recommends"
+docker exec nodemanager python3 --version
+```
+
+> Este paso puede volver a ser necesario si el contenedor `nodemanager` se recrea desde cero. Si se quiere evitar repetirlo, conviene construir una imagen propia del nodemanager con Python 3 incluido.
+
 > `-file` distribuye el script al directorio de trabajo de cada tarea YARN; por eso se referencia solo por nombre (`mapper.py`), no por ruta absoluta.
 
-> Si la carpeta ya existe de una corrida anterior, borrarla primero:
-> `docker exec namenode hdfs dfs -rm -r /user/hadoop/electropuno/mapreduce_agg`
+> Si la carpeta ya existe de una corrida anterior, borrarla primero. Si `hdfs dfs -rm` dice que el namenode esta en `safe mode`, ejecutar primero `docker exec namenode hdfs dfsadmin -safemode wait` y luego repetir el borrado.
 
 ### Que hace
 - Lanza un job YARN MapReduce sobre toda la carpeta `/raw/` (todos los meses a la vez).
@@ -200,9 +253,10 @@ Limpiar, tipar y transformar la informacion para dejarla lista para modelado.
 ### Comando
 
 ```powershell
-docker exec spark-master /spark/bin/spark-submit \
-  /opt/work/scripts/modify/modify_puno.py \
+docker exec spark-master /spark/bin/spark-submit `
+  /opt/work/scripts/modify/modify_puno.py `
   --input hdfs://namenode:9000/user/hadoop/electropuno/raw/
+
 ```
 
 > **Importante:** Modify lee los CSVs crudos desde `/user/hadoop/electropuno/raw/`, NO la salida del MapReduce. Esta es la fuente que garantiza las 25 columnas necesarias para el enriquecimiento completo.
@@ -280,15 +334,14 @@ docker exec spark-master /spark/bin/spark-submit /opt/work/scripts/model/assess_
 ### Proposito
 Visualizar los resultados del Assess con graficos guardados como PNG en `./output/plots/`.
 
-### Requisito previo (una sola vez)
-
-```powershell
-pip install -r requirements.txt
-```
+> El entorno virtual `.venv` con las dependencias debe estar activo (ver seccion **Configuracion inicial del entorno Python** al inicio de esta guia).
 
 ### Comando
 
 ```powershell
+# Activar el entorno si no lo esta ya
+.venv\Scripts\activate
+
 python scripts/assess/plot_results.py
 ```
 

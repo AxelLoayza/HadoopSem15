@@ -56,7 +56,7 @@ def main():
             continue
         ubigeo, mes, consumo, importe = result
         # Clave: ubigeo|mes  Valor: consumo_kwh|importe_soles|1
-        print(f"{ubigeo}|{mes}\t{consumo:.4f}|{importe:.4f}|1")
+        print("{}|{}\t{:.4f}|{:.4f}|1".format(ubigeo, mes, consumo, importe))
 
 
 if __name__ == "__main__":

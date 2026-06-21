@@ -218,10 +218,40 @@ Para no dispersar el trabajo, el modelado debe ordenarse así:
 ## 13. Estructura de carpetas recomendada
 La estructura canónica del proyecto queda así:
 
-- `scripts/sample/` -> inspección local.
-- `scripts/explore/` -> exploración descriptiva.
-- `scripts/modify/` -> limpieza y transformación.
+- `scripts/sample/` -> inspección local de estructura y columnas por mes.
+- `scripts/explore/` -> exploración descriptiva (incluye sub-carpeta `mapreduce/`).
+- `scripts/modify/` -> limpieza y transformación sobre datos crudos.
 - `scripts/model/` -> modelado.
 - `scripts/assess/` -> evaluación y comparación final.
 
 Esto deja el flujo SEMMA explícito y facilita la entrega de evidencia por etapa.
+
+## 14. Integración de MapReduce en el flujo
+
+### Posicion en SEMMA
+MapReduce se ubica como sub-etapa dentro de **Explore (E)**. No reemplaza ni precede a Modify.
+
+### Proposito declarado
+- Demostrar uso explícito del motor MapReduce de Hadoop.
+- Reducir el costo computacional del Explore Spark en escenario multi-mes.
+- Generar una tabla ligera de consumo por zona y periodo que Spark puede explorar sin tocar los CSV crudos completos.
+
+### Contrato de columnas y compatibilidad verificada
+
+| Etapa | Lee de | Columnas de entrada | Columnas de salida |
+|-------|--------|---------------------|--------------------|
+| MapReduce | CSV crudos (25 col) | `ubigeo`, `consumo_kwh`, `importe_soles`, `periodo_facturado` | `ubigeo`, `mes`, `total_consumo`, `total_importe`, `registros` |
+| Explore Spark | Salida MapReduce | tabla ligera | reportes descriptivos |
+| Modify | CSV crudos (25 col) | las 25 columnas originales | Parquet enriquecido con tipos y UBIGEO |
+| build_model_dataset | Output de Modify | `anio_facturacion`, `mes_facturacion`, `region_code`, `region_name`, `province_code`, `province_name`, `departamento`, `provincia`, `distrito`, `ubigeo`, `consumo_kwh`, `importe_soles` | tabla agregada por zona-periodo |
+| Model | Output de build_model_dataset | `anio_facturacion`, `mes_facturacion`, `registros`, `importe_total_soles`, `importe_promedio_soles`, `ubigeo`, `consumo_total_kwh` | predicciones |
+
+**Conclusion:** MapReduce y Modify leen la misma fuente pero su salida va a destinos distintos. No se encadenan. El contrato de columnas de Modify, Model y Assess queda intacto.
+
+### Scripts de MapReduce
+- `scripts/explore/mapreduce/mapper.py` -> extrae clave `ubigeo|mes` y valores de consumo.
+- `scripts/explore/mapreduce/reducer.py` -> agrega suma y conteo por clave.
+- Ejecutados con `hadoop jar hadoop-streaming.jar` sobre la carpeta `/user/hadoop/electropuno/raw/`.
+
+### Riesgo computacional sin MapReduce
+Si Spark intentara leer varios CSV crudos completos directamente, el worker con `SPARK_WORKER_CORES=1` y `SPARK_WORKER_MEMORY=1g` sufriría en operaciones como `count()`, `distinct()` y `groupBy` sobre millones de filas. MapReduce elimina ese riesgo al pre-agregar antes de que Spark entre.

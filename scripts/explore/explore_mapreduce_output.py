@@ -64,8 +64,15 @@ def main():
     )
 
     total_filas = df.count()
-    print(f"\n=== Explore E.2: salida MapReduce ===")
-    print(f"Total de filas (zona-mes): {total_filas}")
+    print("\n=== Explore E.2: salida MapReduce ===")
+    print("Total de filas (zona-mes): {}".format(total_filas))
+
+    # Descartar filas con mes invalido (producto de campos CSV con ; dentro de comillas)
+    df_invalidos = df.filter(~F.col("mes").rlike("^[0-9]{6}$"))
+    n_invalidos = df_invalidos.count()
+    if n_invalidos > 0:
+        print("[INFO] {} filas con mes invalido descartadas (desalineamiento CSV por ; en campo de nombre).".format(n_invalidos))
+    df = df.filter(F.col("mes").rlike("^[0-9]{6}$"))
 
     # ----------------------------------------------------------------------- #
     # 2. Cobertura temporal: que meses estan presentes
@@ -110,8 +117,9 @@ def main():
         broadcast_map = spark.sparkContext.broadcast(ubigeo_map)
 
         def get_region(ubigeo):
-            entry = broadcast_map.value.get(ubigeo, {})
-            return entry.get("region_name", "DESCONOCIDO")
+            districts = broadcast_map.value.get("districts", {})
+            entry = districts.get(ubigeo, {})
+            return entry.get("department", "DESCONOCIDO")
 
         get_region_udf = F.udf(get_region, StringType())
         df_enrich = df.withColumn("region", get_region_udf(F.col("ubigeo")))
