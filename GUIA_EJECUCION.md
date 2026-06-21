@@ -14,6 +14,9 @@ Este documento ordena la ejecucion real del proyecto, desde el levantamiento de 
 
 ## 1. Levantar los contenedores
 
+## ".\ejecutar_pipeline.ps1"
+
+
 ### Proposito
 Iniciar la infraestructura distribuida local para disponer de almacenamiento HDFS y motor de procesamiento Spark.
 
@@ -87,7 +90,7 @@ docker exec namenode hdfs dfs -ls /user/hadoop/electropuno/
 ### Proposito
 Revisar una muestra local antes de lanzar Spark sobre toda la data.
 
-### Comando
+### Comando sample primer paso
 
 ```powershell
 docker exec spark-master /spark/bin/spark-submit /opt/work/scripts/sample/inspect_sample.py --input data.csv

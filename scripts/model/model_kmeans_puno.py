@@ -82,8 +82,6 @@ def main() -> None:
 
         predictions.select(
             "ubigeo",
-            "anio_facturacion",
-            "mes_facturacion",
             *NUMERIC_COLUMNS,
             "features",
             "prediction",

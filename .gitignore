@@ -6,3 +6,6 @@ __pycache__/
 *.log
 .DS_Store
 .env
+logs/
+logs/*
+Data-2025/
